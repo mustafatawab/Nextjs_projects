@@ -10,9 +10,9 @@ function PorfolioDetails({ projectNumber, projectHeading }: any) {
         <h1 className="text-3xl font-bold">{projectHeading}</h1>
         <p>
           The technological revolution is changing aspect of our lives, and the
-          fabric of society itself. it's also changing the way we learn and what
+          fabric of society itself. it is also changing the way we learn and what
           we learn. Factual knowledge is less prized when everything you ever
-          need to know can be found on your phone. There's no imperative to be
+          need to know can be found on your phone. There is no imperative to be
           an expert at doing everything when you can.
         </p>
         <div className="group flex items-center gap-4">

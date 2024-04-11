@@ -8,7 +8,7 @@ function Work() {
         <h1 className="text-3xl font-bold">Lets Work Together</h1>
         <p>
           The technological revolution is changing aspect of our lives, and the
-          fabric of society itself. it's also changing the way we learn and what
+          fabric of society itself. it is also changing the way we learn and what
           we learn
         </p>
             <PrimaryButton text='Contact Me' link='/'/>
