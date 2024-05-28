@@ -35,8 +35,8 @@ const carouselData = [
 ]
 
 export default function CarouselDemo() {
-    return (
-        <section className="flex flex-col justify-start items-center w-full my-10 bg-[#FCFBF3] space-y-5">
+    return (<>
+        <section className="flex flex-col justify-start items-center w-full my-10 bg-[#FCFBF3] space-y-5 overflow-hidden">
             <p className="text-center font-bold text-gray-500 text-2xl">Your Stories</p>
             <h2 className="font-bold text-3xl text-center">Each review has a personal stories</h2>
             <Carousel className="w-2/3">
@@ -53,7 +53,7 @@ export default function CarouselDemo() {
                                             <p>{item.description}</p>
                                         </div>
                                         <div className="w-1/2 pl-4">
-                                            <Image src={item.image} alt="" width={600} height={600}/>
+                                            <Image src={item.image} alt="" width={600} height={600} />
                                         </div>
                                     </CardContent>
                                 </Card>
@@ -65,5 +65,8 @@ export default function CarouselDemo() {
                 <CarouselNext />
             </Carousel>
         </section>
+
+        
+    </>
     )
 }

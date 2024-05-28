@@ -1,3 +1,4 @@
+import reviewImage from '../assets/images/reviews/download.png'
 export const reviews = [
   {
     review:
@@ -70,3 +71,19 @@ export const reviews = [
     stars: 5,
   },
 ];
+
+
+
+export const CategoryReviews = [
+  {
+    img : reviewImage,
+    title : "ecoATM",
+    rating : 3.7,
+    stars : 3,
+    reviews : "7801",
+    location : "United States",
+    more : "",
+    state : false,
+
+  }
+]

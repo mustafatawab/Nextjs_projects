@@ -3,6 +3,7 @@ import { useState } from 'react'
 import Logo from '../assets/images/logo-white.svg'
 import Image from 'next/image'
 import Link from 'next/link'
+import { FaSearch } from 'react-icons/fa'
 
 const Navbar = () => {
 
@@ -16,18 +17,19 @@ const Navbar = () => {
     ]
 
     return (
-        <nav className="bg-black border-b w-full md:static md:text-sm md:border-none sticky-top  top-0">
-            <div className="items-center px-4 max-w-screen-xl mx-auto md:flex md:px-8">
+        <nav className="bg-black border-b w-full md:static md:text-sm md:border-none py-2">
+            <div className=" items-center  max-w-screen-xl mx-auto md:flex md:px-8">
                 <div className="flex items-center justify-between py-3 md:py-5 md:block bg-black">
                     <Link href="/">
                         <Image
                             src={Logo}
-                            width={120}
+                            width={170}
                             height={50}
                             alt="Trustpilot logo"
                         />
                     </Link>
-                    <div className="md:hidden bg-black">
+
+                    <div className="md:hidden bg-black px-4">
                         <button className="text-white hover:text-white"
                             onClick={() => setState(!state)}
                         >
@@ -45,12 +47,17 @@ const Navbar = () => {
                         </button>
                     </div>
                 </div>
+
                 <div className={`bg-black flex-1 pb-3 mt-8 md:block md:pb-0 md:mt-0 ${state ? 'block' : 'hidden'} text-center`}>
                     <ul className="justify-end items-center space-y-6 md:flex md:space-x-6 md:space-y-0 text-center">
+                        <div className='hidden lg:flex items-center bg-white w-96 rounded-md py-1 px-4 '>
+                            <FaSearch />
+                            <input type="text" placeholder='Search for a company or category' className='w-full py-2 px-4 bg-transparent outline-none' />
+                        </div>
                         {
                             navigation.map((item, idx) => {
                                 return (
-                                    <li key={idx} className="text-white hover:border-b-2 py-3 ">
+                                    <li key={idx} className="text-white text-md hover:border-b-2 py-3 ">
                                         <Link href={item.path} className="block">
                                             {item.title}
                                         </Link>
@@ -59,14 +66,15 @@ const Navbar = () => {
                             })
                         }
                         {/* <span className='hidden w-px h-6 bg-gray-300 md:block'></span> */}
+
                         <div className='space-y-3 items-center gap-x-6 md:flex md:space-y-0'>
                             <li className=' hover:border-b-2'>
-                                <Link href="javascript:void(0)" className="block py-3 text-center text-white border-white hover:border-b-2  rounded-lg md:border-none">
+                                <Link href="/login" className="text-md block py-3 text-center text-white border-white hover:border-b-2  rounded-lg md:border-none">
                                     Log in
                                 </Link>
                             </li>
                             <li>
-                                <Link href="javascript:void(0)" className="block py-3 px-4  text-center text-black bg-[#A6C0F0] hover:bg-[#205CD4] hover:text-white active:bg-indigo-700 active:shadow-none rounded-full font-semibold shadow md:inline">
+                                <Link href="https://business.trustpilot.com/?utm_medium=consumer&utm_source=for_companies&utm_campaign=consumer_cta&_gl=1*wum6ct*_ga*NjA2OTI5MjA3LjE3MTIyMTQxNjY.*_ga_11HBWMC274*MTcxNDkwOTY4Ny40MC4xLjE3MTQ5MTExMTAuNTcuMC4w" className="text-md block py-4 px-6  text-center text-black bg-[#A6C0F0] hover:bg-[#205CD4] hover:text-white active:bg-indigo-700 active:shadow-none rounded-full font-semibold shadow md:inline">
                                     For Business
                                 </Link>
                             </li>

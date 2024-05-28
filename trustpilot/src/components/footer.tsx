@@ -11,13 +11,19 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import { countries } from '@/utility/countries'
+
+import ReactCountryFlag from 'react-country-flag';
+
+
+
 
 function Footer() {
     return (
 
-        <footer className='text-start flex flex-col justify-start items-start bg-black py-10 px-20 text-white space-y-6'>
+        <footer className='text-start flex flex-col justify-start items-start bg-black py-10 px-20 text-white space-y-6 w-full overflow-hidden'>
             <Image src={logo} alt='' width={130} height={100} />
-            <section className='flex w-full justify-between'>
+            <section className='flex flex-wrap w-full justify-between'>
                 <div className='space-y-2'>
                     <p className='text-[#9FA0A0] font-semibold'>About</p>
 
@@ -146,12 +152,11 @@ function Footer() {
                             <SelectValue placeholder="Country" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="unitedstates">United States</SelectItem>
-                            <SelectItem value="canada">Canada</SelectItem>
-                            <SelectItem value="denmark">Denmark</SelectItem>
-                            <SelectItem value="denmark">Denmark</SelectItem>
-                            <SelectItem value="denmark">Denmark</SelectItem>
-                            <SelectItem value="denmark">Denmark</SelectItem>
+                            {countries.map((country, i) => <span key={i} className=' flex items-center gap-2'>
+                                <ReactCountryFlag countryCode={country.code} svg />
+                                <SelectItem value={country.name}>{country.name}</SelectItem>
+
+                            </span>)}
                         </SelectContent>
                     </Select>
 

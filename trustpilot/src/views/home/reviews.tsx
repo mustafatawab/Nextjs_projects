@@ -14,15 +14,15 @@ const Reviews = () => {
     return (
         <>
 
-            <section className='bg-[#FCFBF3]'>
+            <section className='bg-[#FCFBF3] w-full overflow-hidden'>
 
                 <h1 className='font-bold text-3xl text-center py-5'>Recent Reviews</h1>
                 <div className=''>
 
 
 
-                    <div className='grid grid-cols-5 gap-5 p-5'>
-                        {reviews.map((review, i) => <div key={i} className='bg-white border p-5 space-y-2'>
+                    <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 p-5'>
+                        {reviews.map((review, i) => <div key={i} className='bg-white border p-5 space-y-2 hover:scale-110 duration-300 hover:shadow-lg'>
                             <div className='flex justify-start items-center gap-5'> <Image src={profile} alt='profile' width={50} height={50} className='rounded-full' />
                                 {review.stars == 1 && <Image src={stars1} alt='' width={100} />}
                                 {review.stars == 2 && <Image src={stars2} alt='' width={100} />}

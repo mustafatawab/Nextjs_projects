@@ -9,9 +9,9 @@ import QRCode from '@/assets/images/qrcod.svg'
 const DownloadApp = () => {
     return (
 
-        <section className='bg-[#FCFBF3] py-10 sm:hidden md:flex'>
+        <section className='bg-[#FCFBF3] py-10 hidden md:flex w-full overflow-hidden'>
 
-            <div className='text-center bg-white md:w-2/3 border mx-auto p-10 space-y-5 relative'>
+            <div className='text-center bg-white md:w-3/4   lg:w-2/3 border mx-auto p-10 space-y-5 relative'>
                 <h2 className='font-bold text-2xl text-center'>Shop smarter with the Trustpilot app
                 </h2>
                 <p>Keep Trustpilot in your pocket. Find companies, read reviews, or write them—all while on the go.
