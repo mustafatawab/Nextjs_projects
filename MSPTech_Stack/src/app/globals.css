@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* *{
+  font-family: 'Poppins';
+} */
+
+*{
+  margin: 0px;
+  padding: 0px;
+  
+}
+label{
+  color: #0F1519CC;
+  font-weight: 600;
+}
+
+
+.sticky-nav {
+  animation: sticky-nav 300ms;
+}
+ 
+@keyframes sticky-nav {
+ 0% {
+     transform: translateY(-6em)
+ }
+
+ 100% {
+     transform: translateY(0)
+ }
+}
+
