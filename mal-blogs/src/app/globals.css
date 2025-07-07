@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+.rich h2 , h1 , h3 {
+  color : #FCB400;
+  font-weight: bold;
+
+}
+
+/* .rich{
+  line-height: 30px;
+} */
+
+body{
+  font-family:"__Jost_54b096","__Jost_Fallback_54b096" ,  "Jost" , sans-serif;
+  font-weight: 300;
+}
