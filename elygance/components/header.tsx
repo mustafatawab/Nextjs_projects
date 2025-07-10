@@ -128,19 +128,19 @@ export function Header() {
                           </div>
                         </div>
                         <Link
-                          href="/profile"
+                          href="#"
                           className="flex items-center gap-2 text-lg font-medium transition-colors hover:text-primary p-2"
                         >
                           <UserCircle className="h-5 w-5" />
                           Profile
                         </Link>
-                        <Link
+                        {/* <Link
                           href="/orders"
                           className="flex items-center gap-2 text-lg font-medium transition-colors hover:text-primary p-2"
                         >
                           <User className="h-5 w-5" />
                           Orders
-                        </Link>
+                        </Link> */}
                         <button
                           onClick={handleSignOut}
                           className="flex items-center gap-2 text-lg font-medium transition-colors hover:text-primary p-2 w-full text-left"
@@ -244,23 +244,12 @@ export function Header() {
                     </div>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
-                      <Link href="/profile" className="cursor-pointer">
+                      <Link href="#" className="cursor-pointer">
                         <UserCircle className="mr-2 h-4 w-4" />
                         Profile
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/orders" className="cursor-pointer">
-                        <User className="mr-2 h-4 w-4" />
-                        Orders
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/wishlist" className="cursor-pointer">
-                        <User className="mr-2 h-4 w-4" />
-                        Wishlist
-                      </Link>
-                    </DropdownMenuItem>
+                  
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">
                       <LogOut className="mr-2 h-4 w-4" />
