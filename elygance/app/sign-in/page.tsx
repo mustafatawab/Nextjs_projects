@@ -13,6 +13,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { useAuth } from "@/components/auth-provider"
+import { FaFacebookF } from "react-icons/fa";
+
+
+
 
 export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false)
@@ -23,7 +27,7 @@ export default function SignInPage() {
   const [error, setError] = useState("")
 
   const router = useRouter()
-  const { user, signIn, signInWithGoogle } = useAuth()
+  const { user, signIn, signInWithGoogle, signInWithFacebook } = useAuth()
 
   // Redirect if already signed in
   useEffect(() => {
@@ -53,6 +57,20 @@ export default function SignInPage() {
     setError("")
 
     const result = await signInWithGoogle()
+
+    if (result.error) {
+      setError(result.error)
+      setIsLoading(false)
+    }
+    // Don't set loading to false here as we're redirecting
+  }
+
+
+  const handleFacebookSignIn = async () => {
+    setIsLoading(true)
+    setError("")
+
+    const result = await signInWithFacebook()
 
     if (result.error) {
       setError(result.error)
@@ -188,6 +206,15 @@ export default function SignInPage() {
             </svg>
             {isLoading ? "Signing in..." : "Sign in with Google"}
           </Button>
+
+
+          <div className="mt-6">
+          <Button variant="outline" className="w-full bg-transparent" onClick={handleFacebookSignIn} disabled={isLoading}>
+          <FaFacebookF className="text-blue-500"/>
+
+            {isLoading ? "Signing up..." : "Sign up with Facebook "}
+          </Button>
+        </div>
         </div>
       </div>
     </div>

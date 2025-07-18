@@ -12,6 +12,7 @@ type AuthContextType = {
   signIn: (email: string, password: string) => Promise<{ error?: string }>
   signUp: (email: string, password: string, firstName: string, lastName: string) => Promise<{ error?: string }>
   signInWithGoogle: () => Promise<{ error?: string }>
+  signInWithFacebook: () => Promise<{ error?: string }>
   signOut: () => Promise<void>
 }
 
@@ -74,6 +75,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(session.user)
         storeUserData(session.user, session)
       }
+
+      console.log(session)
       setLoading(false)
     }
 
@@ -228,6 +231,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
+
+
+  const signInWithFacebook = async () => {
+    try {
+      const {  error } = await supabase.auth.signInWithOAuth({
+        provider: "facebook",
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      })
+
+      if (error) {
+        return { error: error.message }
+      }
+      console.log(error)
+      return {}
+    } catch (error) {
+      console.error("Facebook sign in error:", error)
+      return { error: "An unexpected error occurred" }
+    }
+  }
+
   const signOut = async () => {
     try {
       await supabase.auth.signOut()
@@ -247,6 +272,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         signIn,
         signUp,
         signInWithGoogle,
+        signInWithFacebook,
         signOut,
       }}
     >

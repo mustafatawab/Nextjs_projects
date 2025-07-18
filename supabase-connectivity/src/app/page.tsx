@@ -1,25 +1,39 @@
+'use client'
+import { useEffect } from "react"
+import { supabase } from "@/lib/supabase/client"
+export default async function Page() {
 
-import { supabase } from '../../lib/supabase/supabase'
-const page = async () => {
 
-  // Fetch items from the "items" table
-
-  const { data: users, error } = await supabase.auth.getUser();
+  const getUser = async () => {
   
-  if(error){
-    console.log(error);
-    return <div className='flex items-center justify-center h-screen'>
-      <span className='text-red-500 '>{error.message}</span>
-    </div>
-  }else{
-    console.log(users);
+    const {  data , error   } = await supabase.auth.getUser()
+    
+    // const { data, error } = await supabase.from("ping").select("*")
+    // if (!user) {
+      //   return <div className="flex justify-center items-center py-5">
+      //     <span className="bg-red-900 text-red-200 p-2">
+      //     Error Occured
+      
+      //     </span>
+      //   </div>
+      // }
+    
+      console.log(data)
+      console.log(error)
   }
-  return (
-    <div>
 
-        <h2 className='text-xl font-bold'>{}</h2>
-    </div>
+  useEffect( () => {
+      getUser()
+    
+  })
+
+
+
+  return (
+    <>
+        <main>
+          <h1 className="text-4xl font-bold p-5 text-center">Home Page</h1>
+        </main>
+    </>
   )
 }
-
-export default page

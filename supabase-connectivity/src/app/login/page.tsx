@@ -1,56 +1,52 @@
 'use client'
+
 import React, { useState } from 'react'
-import { supabase } from '../../../lib/supabase/supabase'
+import { supabase } from '@/lib/supabase'
+
 
 const page = () => {
-    // loading
-    const [loading , setLoading] = useState<boolean>(false)
-    const [formData, setFormData] = useState<{
-        email: string;
-        password: string;
-    }>({
-        email: '',
-        password: ''
-    });
+    const signIn = async (e:any) => {
+      e.preventDefault()
+      const {data, error} = await supabase.auth.signInWithPassword({
+        email: "mustafatawab09@gmail.com",
+        password : "TestPassword"
+      })
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
-    };
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        setLoading(true)
-        const {data : user , error} = await supabase.auth.signInWithPassword({
-            email: formData.email,
-            password: formData.password
-        });
+      console.log(data)
+      console.log(error)
+    }
 
-        if (error) {
-            console.error('Error logging in:', error.message);
-            alert('Login failed: ' + error.message);
-        } else {
-            console.log('User logged in:', user);
-            alert('Login successful!');
-            // Redirect or perform any other action after successful login
-            // window.location.href = '/';
-        }
+    const oAuthLogin = async (e:any) => {
+      e.preventDefault()
+      const {data , error} = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+      })
+      console.log(data)
+      console.log(error)
+    }
 
-        if(loading) {
-            return <div className='text-3xl font-bold text-center'>Loading</div>
-        }
-        setLoading(false)
 
-    };
+    const facebookLogin = async (e:any) => {
+      e.preventDefault()
+      const {data , error} = await supabase.auth.signInWithOAuth({
+        provider: 'facebook',
+      })
+      console.log(data)
+      console.log(error)
+    }
+
+
     return (
     <div>
-        <form action="" onSubmit={handleSubmit}>
-            <div className='flex flex-col justify-center items-center h-screen'>
-                <input type="email" onChange={handleChange} name="email" id="email" className="border border-gray-300 p-2 rounded mb-4"/>
-                <input type="password" onChange={handleChange} name="password" id="password" className="border border-gray-300 p-2 rounded mb-4"/>
-                <button type="submit" className='bg-blue-500 text-white px-4 py-2 rounded'>Login</button>
-                <p className='text-gray-500'>Don't have an account? <a href="/register" className='text-blue-500'>Register</a></p>
+        <form action="" onSubmit={signIn} >  
+            <div className='flex flex-col gap-4 w-1/2 mx-auto bg-white shadow-2xl space-y-5 p-5'>
+              <input type="email" placeholder='Enter your email address'/>
+              <input type="password" placeholder='Enter your Password'/>
+              <button type="submit" className='bg-black text-white p-2'>Login</button>
+              <button onClick={oAuthLogin} className='bg-white text-whtie my-1 rounded'>Google Login</button>
+              <button onClick={facebookLogin} className='bg-blue-500 text-white'>Facebook Login</button>
+
             </div>
         </form>
     </div>
