@@ -1,25 +1,25 @@
-import { createClient, isSupabaseConfigured } from "../../lib/supabase/server"
-import { redirect } from "next/navigation"
 
-export default async function Page() {
- const supabase = createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+import { supabase } from '../../lib/supabase/supabase'
+const page = async () => {
 
-  // const { data, error } = await supabase.from("ping").select("*")
-  if (!data) {
-    return <div className="flex justify-center items-center py-5">
-      <span className="bg-red-900 text-red-200 p-2">
-      Error Occured
+  // Fetch items from the "items" table
 
-      </span>
+  const { data: users, error } = await supabase.auth.getUser();
+  
+  if(error){
+    console.log(error);
+    return <div className='flex items-center justify-center h-screen'>
+      <span className='text-red-500 '>{error.message}</span>
     </div>
+  }else{
+    console.log(users);
   }
-
   return (
-    <ul>
-        {JSON.stringify(data, null , 2)}
-    </ul>
+    <div>
+
+        <h2 className='text-xl font-bold'>{}</h2>
+    </div>
   )
 }
+
+export default page
