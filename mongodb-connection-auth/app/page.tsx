@@ -7,12 +7,13 @@ import Services from "./views/portfolio/Portfolio";
 import Contact from "./views/contact/Contact";
 import Resume from "./views/resume/Resume";
 import Footer from "./views/footer/Footer";
+import Register from "./components/register/register";
 
 
 export default function Home() {
   return (
     <>
-    <HeroSection></HeroSection>
+    {/* <HeroSection></HeroSection>
       <Wrapper>
         <SocailIcons></SocailIcons>
         
@@ -22,7 +23,9 @@ export default function Home() {
 
         <Contact></Contact>
         <Footer />
-      </Wrapper>
+      </Wrapper> */}
+
+      <Register />
     </>
   );
 }
