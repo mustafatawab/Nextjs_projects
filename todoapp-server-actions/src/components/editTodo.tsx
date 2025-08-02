@@ -4,17 +4,17 @@ import React from 'react'
 import { TodoType } from '../../types'
 import { useFormStatus, useFormState } from 'react-dom'
 import { useActionState } from 'react'
-const EditTodo = () => {
+const EditTodo = ({todo} : {todo : TodoType}) => {
     const {pending} = useFormStatus()
 
     const [state , formAction] = useActionState(edit_todo, {status : "" , message : ""})
     const {status , message} = state
 
     const handleFormSubmit = (formData: FormData) => {
-        // const id: number = task.id
+        const id: number = todo.id
         const content: string = formData.get("edit_task") as string
-        // const is_completed: boolean = task.is_completed
-        // formAction({id , content , is_completed})
+        const is_completed: boolean = todo.is_completed
+        formAction({id , content , is_completed})
     }
 
   return (

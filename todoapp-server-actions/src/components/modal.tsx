@@ -19,10 +19,12 @@ const Modal = ({
   children,
   add,
   edit,
+  todo
 }: {
   children: React.ReactNode;
   add?: boolean;
   edit?: boolean;
+  todo : TodoType
 }) => {
   return (
     <Dialog>
@@ -31,14 +33,14 @@ const Modal = ({
         <form>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-              <DialogTitle>Add Task</DialogTitle>
+              <DialogTitle>{add && "Add"} {edit && "Edit" } Task</DialogTitle>
               <DialogDescription>
                 Please fill the field to {add ? "add" : "edit"} your task.
               </DialogDescription>
             </DialogHeader>
 
             {add && <AddTodo />}
-            {edit && <EditTodo />}
+            {edit && <EditTodo todo={todo}/>}
           </DialogContent>
         </form>
       ) : (

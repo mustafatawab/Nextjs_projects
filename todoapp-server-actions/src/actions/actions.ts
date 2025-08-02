@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { TodoType } from "../../types";
 
 export async function add_todo(
   state: { status: string; message: string },
@@ -17,8 +18,8 @@ export async function add_todo(
       body: JSON.stringify({ content: new_todo }),
     });
     const data = await response.json();
+    revalidatePath("/todos");
     if (data.content) {
-      revalidatePath("/todos");
       return { status: "Success", message: "Task added successfully" };
     } else {
       return { status: "error", message: "Something went wrong" };
@@ -50,8 +51,8 @@ export async function edit_todo(
     });
 
     const data = await response.json();
+    revalidatePath("/todos");
     if (data.content) {
-      revalidatePath("/todos");
       return { status: "Success", message: "Task added successfully" };
     } else {
       return { status: "error", message: "Something went wrong" };

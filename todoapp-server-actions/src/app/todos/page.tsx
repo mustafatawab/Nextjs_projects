@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -17,32 +18,25 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Button } from "@/components/ui/button";
 import Modal from "@/components/modal";
+import AddTodoButton from "@/components/addTodoButton";
 
-const page = () => {
-  const todo_list: TodoType[] = [
-    {
-      id: 1,
-      content: "First Task",
-      is_completed: false,
-    },
+const page =  () => {
+  const [todoList, setTodoList] = useState<TodoType[]>([]);
 
-    {
-      id: 2,
-      content: "Hello",
-      is_completed: true,
-    },
-  ];
+  useEffect(() => {
+    const fetchTodos = async () => {
+      const response = await fetch("http://localhost:8000/todos");
+      const data = await response.json();
+      setTodoList(data);
+    };
+
+    fetchTodos();
+  }, []);
+
   return (
     <main className="">
-      <div className="mt-10 max-w-5xl mx-auto">
-        <Modal add={true}>
-          <Button variant="outline" className="w-full bg-teal-600 text-white">
-            Add Task
-          </Button>
-        </Modal>
-      </div>
+      <AddTodoButton todo={todoList[-1]}/>
       <Table className="my-5 max-w-5xl  mx-auto">
         <TableCaption>A list of your tasks here.</TableCaption>
         <TableHeader className="bg-gray-200 rounded-lg">
@@ -52,39 +46,41 @@ const page = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {todo_list.map((todo: TodoType) => (
-            <TableRow key={todo.id}>
-              <TableCell className="font-medium">{todo.content}</TableCell>
+          {todoList &&
+            todoList.map((todo: TodoType) => (
+              <TableRow key={todo.id}>
+                <TableCell className="font-medium">{todo.content}</TableCell>
 
-              <TableCell className="text-right">
-                <div className="flex items-center gap-2 justify-end">
-                  <Tooltip>
-                    <TooltipTrigger>
-                      <GrStatusGood
-                        className={`${
-                          todo.is_completed ? "text-green-500" : "text-gray-500"
-                        }`}
-                        size={24}
-                      />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>
-                        Change the status to{" "}
-                        {String(!todo.is_completed).toUpperCase()}
-                      </p>
-                    </TooltipContent>
-                  </Tooltip>
-                  <Modal edit={true}>
-                    <FaEdit size={24} className="text-blue-600" />
-                  </Modal>
-                  <Modal>
-
-                  <MdDelete size={24} className="text-red-600" />
-                  </Modal>
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
+                <TableCell className="text-right">
+                  <div className="flex items-center gap-2 justify-end">
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <GrStatusGood
+                          className={`${
+                            todo.is_completed
+                              ? "text-green-500"
+                              : "text-gray-500"
+                          }`}
+                          size={24}
+                        />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>
+                          Change the status to{" "}
+                          {String(!todo.is_completed).toUpperCase()}
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                    <Modal todo={todo} edit={true}>
+                      <FaEdit size={24} className="text-blue-600" />
+                    </Modal>
+                    <Modal todo={todo}>
+                      <MdDelete size={24} className="text-red-600" />
+                    </Modal>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
         </TableBody>
       </Table>
     </main>
