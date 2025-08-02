@@ -1,37 +1,54 @@
-import { NextRequest, NextResponse } from "next/server"
-import {DbConnection} from '@/lib/connection'
-import User from "@/model/User"
+import { NextRequest, NextResponse } from "next/server";
+import { DbConnection } from "@/lib/connection";
+import User from "@/model/User";
 import bcryptjs from "bcryptjs";
+import jwt from "jsonwebtoken";
 
-export async function GET(request: NextRequest, response : NextResponse) {
-    await DbConnection()
-
-
-    return NextResponse.json({message : "Register Route is here"})
+export async function GET(request: NextRequest, response: NextResponse) {
+  await DbConnection();
+  return NextResponse.json({ message: "Register Route is here" });
 }
 
-
-
-export async function POST(request: NextRequest, response : NextResponse) {
-    await DbConnection()
-    const body = await request.json()
-    const {name , email , password} = body
-    
-    const user = await User.findOne({email})
-    if (user){
-        return NextResponse.json({message : "User already Exist"})
+export async function POST(request: NextRequest, response: NextResponse) {
+  await DbConnection();
+  const body = await request.json();
+  const { name, email, password } = body;
+  try {
+    const user = await User.findOne({ email });
+    if (user) {
+      console.log("user already exist", user);
+      return NextResponse.json(
+        { message: "User already Exist" },
+        { status: 400 }
+      );
     }
 
-    const salt = await bcryptjs.genSalt(10)
-    const hashedPassword = await bcryptjs.hash(password, salt)
-    
+    const salt = await bcryptjs.genSalt(10);
+    const hashedPassword = await bcryptjs.hash(password, salt);
+
+    const payload = {
+      name: name,
+      email: email,
+    };
+    const JWT_SECRET = "myjwtsecret";
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
+
     const newUser = new User({
-        name,
-        email,
-        password : hashedPassword
-    })
+      name,
+      email,
+      password: hashedPassword,
+      token,
+    });
 
     const addUser = await newUser.save();
+    console.log("new user added ", addUser);
 
-    return NextResponse.json({message : "user added successfully" , user : addUser})
+    return NextResponse.json({
+      message: "user added successfully",
+      user: addUser,
+      token,
+    });
+  } catch (error) {
+    NextResponse.json({ message: "Error", error: error }, { status: 400 });
+  }
 }

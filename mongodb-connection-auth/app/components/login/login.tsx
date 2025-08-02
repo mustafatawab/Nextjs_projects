@@ -9,7 +9,7 @@ import { FaLock } from "react-icons/fa";
 import { IoLockOpen } from "react-icons/io5";
 import { FaEye } from "react-icons/fa";
 
-export default function Register() {
+export default function Login() {
   const router = useRouter();
   const [user, setUser] = React.useState({
     name: "",

@@ -8,6 +8,7 @@ import { CgProfile } from "react-icons/cg";
 import { FaLock } from "react-icons/fa";
 import { IoLockOpen } from "react-icons/io5";
 import { FaEye } from "react-icons/fa";
+import toast from "react-hot-toast";
 
 export default function Register() {
   const router = useRouter();
@@ -24,9 +25,15 @@ export default function Register() {
   const onSignup = async () => {
     try {
       const response = await axios.post("/api/v1/auth/register", user);
-      // router.push("/login");
+      toast.success(response.data.message)
+      if(response.data.token){
+
+        localStorage.setItem("token" , response.data.token)
+      }
+      
     } catch (error: any) {
       console.log("Signup failed", error.message);
+      toast.error(error.message)
     }
   };
 
