@@ -3,6 +3,7 @@ import { DbConnection } from "@/lib/connection";
 import User from "@/model/User";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { cookies } from "next/headers";
 
 export async function GET(request: NextRequest, response: NextResponse) {
   await DbConnection();
@@ -33,6 +34,17 @@ export async function POST(request: NextRequest, response: NextResponse) {
     const JWT_SECRET = "myjwtsecret";
     const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
 
+    const cookieStore = cookies();
+    cookieStore.set("token", token, {
+      httpOnly: true,
+      maxAge: 60 * 60 * 24 * 7, // 1 week
+    });
+
+    cookieStore.set("userId", user._id, {
+      httpOnly: true,
+      maxAge: 60 * 60 * 24 * 7, // 1 week
+    });
+
     const newUser = new User({
       name,
       email,
@@ -46,7 +58,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
     return NextResponse.json({
       message: "user added successfully",
       user: addUser,
-      token,
+      token: token,
     });
   } catch (error) {
     NextResponse.json({ message: "Error", error: error }, { status: 400 });
