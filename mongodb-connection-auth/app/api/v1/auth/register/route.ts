@@ -10,8 +10,8 @@ export async function GET(request: NextRequest, response: NextResponse) {
   return NextResponse.json({ message: "Register Route is here" });
 }
 
+ DbConnection();
 export async function POST(request: NextRequest, response: NextResponse) {
-  await DbConnection();
   const body = await request.json();
   const { name, email, password } = body;
   try {

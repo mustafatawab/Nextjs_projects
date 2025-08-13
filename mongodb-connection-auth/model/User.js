@@ -16,9 +16,7 @@ const userSchema = new mongoose.Schema({
     type : String,
     required : [true , "Please provide your password"]
   },
-  token : {
-    type : String
-  }
+  
 });
 
 export default mongoose.models.users || mongoose.model('users', userSchema);
