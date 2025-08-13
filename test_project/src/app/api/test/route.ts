@@ -2,9 +2,9 @@ import { DbConnection } from "@/lib/connection";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req:NextRequest) {
+    await DbConnection()
     try{
 
-        await DbConnection()
         return NextResponse.json({message : "Connected successfully"})
     }
     catch (error){
