@@ -1,3 +1,4 @@
+import Image from "next/image"
 
 
 export default function ProfilePhotos() {
@@ -14,7 +15,7 @@ export default function ProfilePhotos() {
           key={index}
           className="aspect-square bg-muted rounded-lg overflow-hidden hover:opacity-80 transition-opacity cursor-pointer"
         >
-          <img src={photo || "/placeholder.svg"} alt={`Photo ${index + 1}`} className="w-full h-full object-cover" />
+          <Image src={photo || "/placeholder.svg"} alt={`Photo ${index + 1}`} className="w-full h-full object-cover" width={200} height={200}/>
         </div>
       ))}
     </div>

@@ -4,34 +4,10 @@ import ChatList from "@/components/ChatList"
 import NewChatDialog from "@/components/NewChatDialog"
 
 
-
-interface ChatPageProps {
-  params: {
-    chatId: string
-  }
-}
-
-// Mock data - in a real app, this would come from a database
-const getChatData = (chatId: string) => {
-  const chats = {
-    "1": {
-      name: "Alex Smith",
-      avatar: "/male-professional-headshot.png",
-      isOnline: true,
-    },
-    "2": {
-      name: "Mary Johnson",
-      avatar: "/professional-female-headshot.png",
-      isOnline: true,
-    },
-  }
-  return chats[chatId as keyof typeof chats] || null
-}
-
-export default function ChatPage({ params }: ChatPageProps) {
-  const chatData = getChatData(params.chatId)
-
-  if (!chatData) {
+export default function ChatPage() {
+  // const chatData = getChatData(params.id)
+  const id = "11"
+  if (!id) {
     return (
       <AppLayout>
         <div className="flex items-center justify-center h-full">
@@ -61,10 +37,10 @@ export default function ChatPage({ params }: ChatPageProps) {
         {/* Chat Window */}
         <div className="flex-1">
           <ChatWindow
-            chatId={params.chatId}
-            chatName={chatData.name}
-            chatAvatar={chatData.avatar}
-            isOnline={chatData.isOnline}
+            chatId={id}
+            chatName={"mustafa"}
+            chatAvatar={'/profile.jpg'}
+            isOnline={true}
           />
         </div>
       </div>

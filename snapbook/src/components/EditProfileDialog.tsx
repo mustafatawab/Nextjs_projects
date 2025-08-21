@@ -36,102 +36,10 @@ export default function EditProfileDialog({ open, onOpenChange }: EditProfileDia
 
   const [originalData] = useState(formData)
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
+  
 
-    // Check if email or phone changed
-    if (field === "email" && value !== originalData.email) {
-      setEmailVerified(false)
-      setEmailVerificationSent(false)
-    }
-    if (field === "phone" && value !== originalData.phone) {
-      setPhoneVerified(false)
-      setPhoneVerificationSent(false)
-    }
-  }
 
-  const handleSendVerification = async (type: "email" | "phone") => {
-    setIsLoading(true)
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-
-    // if (type === "email") {
-    //   setEmailVerificationSent(true)
-    //   toast({
-    //     title: "Verification Email Sent",
-    //     description: "Please check your email and click the verification link.",
-    //   })
-    // } else {
-    //   setPhoneVerificationSent(true)
-    //   toast({
-    //     title: "Verification Code Sent",
-    //     description: "Please check your phone for the verification code.",
-    //   })
-    // }
-
-    setIsLoading(false)
-  }
-
-  const handleVerify = async (type: "email" | "phone") => {
-    setIsLoading(true)
-
-    // Simulate verification process
-    // await new Promise((resolve) => setTimeout(resolve, 1500))
-
-    // if (type === "email") {
-    //   setEmailVerified(true)
-    //   toast({
-    //     title: "Email Verified",
-    //     description: "Your email address has been successfully verified.",
-    //   })
-    // } else {
-    //   setPhoneVerified(true)
-    //   toast({
-    //     title: "Phone Verified",
-    //     description: "Your phone number has been successfully verified.",
-    //   })
-    // }
-
-    setIsLoading(false)
-  }
-
-  const handleSave = async () => {
-    // Check if email or phone changes need verification
-    const emailChanged = formData.email !== originalData.email
-    const phoneChanged = formData.phone !== originalData.phone
-
-    // if (emailChanged && !emailVerified) {
-    //   toast({
-    //     title: "Email Verification Required",
-    //     description: "Please verify your new email address before saving.",
-    //     variant: "destructive",
-    //   })
-    //   return
-    // }
-
-    // if (phoneChanged && !phoneVerified) {
-    //   toast({
-    //     title: "Phone Verification Required",
-    //     description: "Please verify your new phone number before saving.",
-    //     variant: "destructive",
-    //   })
-    //   return
-    // }
-
-    setIsLoading(true)
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-
-    // toast({
-    //   title: "Profile Updated",
-    //   description: "Your profile has been successfully updated.",
-    // })
-
-    setIsLoading(false)
-    onOpenChange(false)
-  }
+  
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -168,7 +76,6 @@ export default function EditProfileDialog({ open, onOpenChange }: EditProfileDia
               <Input
                 id="firstName"
                 value={formData.firstName}
-                onChange={(e) => handleInputChange("firstName", e.target.value)}
                 placeholder="Enter your first name"
               />
             </div>
@@ -180,7 +87,6 @@ export default function EditProfileDialog({ open, onOpenChange }: EditProfileDia
               <Input
                 id="lastName"
                 value={formData.lastName}
-                onChange={(e) => handleInputChange("lastName", e.target.value)}
                 placeholder="Enter your last name"
               />
             </div>
@@ -197,7 +103,6 @@ export default function EditProfileDialog({ open, onOpenChange }: EditProfileDia
                 id="email"
                 type="email"
                 value={formData.email}
-                onChange={(e) => handleInputChange("email", e.target.value)}
                 placeholder="Enter your email address"
                 className="flex-1"
               />
@@ -211,7 +116,6 @@ export default function EditProfileDialog({ open, onOpenChange }: EditProfileDia
                   ) : emailVerificationSent ? (
                     <Button
                       size="sm"
-                      onClick={() => handleVerify("email")}
                       disabled={isLoading}
                       className="bg-green-950 hover:bg-green-900"
                     >
@@ -221,7 +125,6 @@ export default function EditProfileDialog({ open, onOpenChange }: EditProfileDia
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => handleSendVerification("email")}
                       disabled={isLoading}
                     >
                       Send Code
@@ -246,7 +149,6 @@ export default function EditProfileDialog({ open, onOpenChange }: EditProfileDia
                 id="phone"
                 type="tel"
                 value={formData.phone}
-                onChange={(e) => handleInputChange("phone", e.target.value)}
                 placeholder="Enter your phone number"
                 className="flex-1"
               />
@@ -260,7 +162,6 @@ export default function EditProfileDialog({ open, onOpenChange }: EditProfileDia
                   ) : phoneVerificationSent ? (
                     <Button
                       size="sm"
-                      onClick={() => handleVerify("phone")}
                       disabled={isLoading}
                       className="bg-green-950 hover:bg-green-900"
                     >
@@ -270,7 +171,6 @@ export default function EditProfileDialog({ open, onOpenChange }: EditProfileDia
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => handleSendVerification("phone")}
                       disabled={isLoading}
                     >
                       Send Code
@@ -293,7 +193,6 @@ export default function EditProfileDialog({ open, onOpenChange }: EditProfileDia
             <Textarea
               id="bio"
               value={formData.bio}
-              onChange={(e) => handleInputChange("bio", e.target.value)}
               placeholder="Tell us about yourself..."
               rows={3}
               className="resize-none"
@@ -310,7 +209,6 @@ export default function EditProfileDialog({ open, onOpenChange }: EditProfileDia
             <Input
               id="location"
               value={formData.location}
-              onChange={(e) => handleInputChange("location", e.target.value)}
               placeholder="Enter your location"
             />
           </div>
@@ -324,7 +222,6 @@ export default function EditProfileDialog({ open, onOpenChange }: EditProfileDia
             <Input
               id="website"
               value={formData.website}
-              onChange={(e) => handleInputChange("website", e.target.value)}
               placeholder="Enter your website URL"
             />
           </div>
@@ -335,7 +232,7 @@ export default function EditProfileDialog({ open, onOpenChange }: EditProfileDia
           <Button variant="outline" onClick={() => onOpenChange(false)} className="flex-1" disabled={isLoading}>
             Cancel
           </Button>
-          <Button onClick={handleSave} disabled={isLoading} className="flex-1 bg-green-950 hover:bg-green-900 dark:text-green-50">
+          <Button  disabled={isLoading} className="flex-1 bg-green-950 hover:bg-green-900 dark:text-green-50">
             {isLoading ? "Saving..." : "Save Changes"}
           </Button>
         </div>

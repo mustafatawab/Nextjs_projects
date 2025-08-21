@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export default function () {
+export default function page() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-green-50 p-4">
       <div className=" p-8 w-full max-w-md">

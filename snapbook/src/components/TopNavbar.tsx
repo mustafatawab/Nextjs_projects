@@ -1,9 +1,9 @@
 "use client";
 
-import React, { use } from "react";
+import React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Bell, User, Settings, LogOut, Search } from "lucide-react";
+import { Bell, User, Settings, LogOut } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
