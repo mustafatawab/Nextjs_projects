@@ -42,3 +42,5 @@ hosting.json
 
 # sensitive files
 serviceAccountKey.json
+/alterlexix/*
+/alterlexix

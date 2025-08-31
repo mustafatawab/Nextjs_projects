@@ -64,6 +64,7 @@ export default function DashboardClientPage({
   user,
   dictionary,
 }: DashboardClientPageProps) {
+  console.log(user)
   const stats = user.stats || {
     totalScore: 0,
     wordsMastered: 0,
@@ -90,11 +91,10 @@ export default function DashboardClientPage({
         onClick={async () => {
           try {
             const res = await setAdminClaim(
-              "eite6T2TJVQdNJCuplrJED2tzcC3",
+              "qVnwyrrYbVSb1Kwx52AdAzTkLaj1",
               true
             );
             toast({ title: res.message });
-            useRouter().push(`/en/admin`)
           } catch (error: any) {
             toast({
               title: "Error",
@@ -114,9 +114,9 @@ export default function DashboardClientPage({
       )}
       <div className="flex flex-wrap justify-between items-center">
         <div>
-          <h1 className="text-4xl font-bold mb-4">
+          <h1 className="text-lg sm:text-3xl md:text-4xl font-bold mb-4 text-wrap">
             Bonjour,{" "}
-            <span className="text-gold-accent">
+            <span className="text-gold-accent text-wrap text-xl sm:text-3xl md:text-4xl">
               {user.displayName || user.email}
             </span>{" "}
             !

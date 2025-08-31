@@ -26,7 +26,6 @@ export function LoginForm({ dictionary }: LoginFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
       await signIn(email, password);
-    
   };
 
   return (

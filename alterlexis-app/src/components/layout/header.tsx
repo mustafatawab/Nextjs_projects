@@ -56,7 +56,7 @@ export function Header({ dictionary, locale }: HeaderProps) {
   };
 
   return (
-    <header className="py-4 border-b border-gold-accent/10 sticky top-0 bg-deep-blue/80 backdrop-blur-sm z-50">
+    <header className="py-4 border-b border-gold-accent/10 sticky top-0 bg-deep-blue/80 backdrop-blur-sm z-50 ">
       <div className="container mx-auto px-6 flex justify-between items-center">
         <Link
           href={`/${locale}`}
@@ -103,6 +103,8 @@ export function Header({ dictionary, locale }: HeaderProps) {
           <div className="hidden md:flex ">
             <AuthButton locale={locale} dictionary={dictionary} />
           </div>
+
+
           <div className="flex md:hidden">
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger>

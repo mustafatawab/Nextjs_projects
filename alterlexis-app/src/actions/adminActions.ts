@@ -44,7 +44,7 @@ export async function getUsers(
   let query = db
     .collection(COLLECTIONS.USERS)
     .orderBy("createdAt", "desc")
-    .limit(20);
+    .limit(10);
   if (startAfterDoc) {
     const lastVisible = await db
       .collection(COLLECTIONS.USERS)
@@ -60,6 +60,8 @@ export async function getUsers(
   const lastVisibleId = snapshot.docs[snapshot.docs.length - 1]?.id;
   return { users, lastVisibleId };
 }
+
+
 
 export async function updatePremiumStatus(uid: string, expiresAt: Date | null) {
   const db = await getFirestore();

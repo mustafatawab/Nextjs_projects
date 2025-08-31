@@ -21,7 +21,7 @@ export default async function AdminLayout({ children, params: { locale } }: Admi
   // }
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen">
+    <div className="flex flex-col lg:flex-row min-h-screen">
       <AdminNavbar dictionary={dictionary} locale={locale} />
       <main className="flex-1 p-4 md:p-8 pt-20 md:pt-8">
         {children}
