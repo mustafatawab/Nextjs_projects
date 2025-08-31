@@ -1,0 +1,49 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper function to check for admin role
+    function isAdmin() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true;
+    }
+
+    // Users Collection
+    match /users/{userId} {
+      // Any authenticated user can create their own profile
+      allow create: if request.auth != null && request.auth.uid == userId;
+
+      // Users can read their own data. Admins can read any user's data.
+      allow get: if request.auth != null && (request.auth.uid == userId || isAdmin());
+
+      // Users can update their own displayName and preferences.
+      // Admins can update any field.
+      allow update: if request.auth != null && 
+                    (request.auth.uid == userId && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['displayName', 'preferences'])) || 
+                    isAdmin();
+      
+      // Nobody can delete user documents from the client
+      allow delete: if false;
+    }
+
+    // Word Bank Collection
+    match /wordBank/{word} {
+      // Any authenticated user can read the word bank
+      allow get, list: if request.auth != null;
+
+      // No one can write to the word bank from the client-side
+      allow create, update, delete: if false;
+    }
+
+    // Premium Keys Collection
+    match /premium_keys/{keyId} {
+      // No one can access premium keys from the client-side
+      allow read, write: if false;
+    }
+
+    // Prevent any other collection from being accessed
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
