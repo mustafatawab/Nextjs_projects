@@ -1,0 +1,116 @@
+{
+  "common": {
+    "appName": "AlterLexis",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "confirm": "Confirm",
+    "email": "Email",
+    "password": "Password",
+    "name": "Name",
+    "submit": "Submit",
+    "error": "Error",
+    "success": "Success",
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "leaderboard": "Leaderboard",
+    "howItWorks": "How It Works",
+    "contact": "Contact",
+    "legal": "Legal Notice",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "premium": "Go Premium",
+    "login": "Login",
+    "signup": "Sign Up",
+    "logout": "Logout",
+    "next": "Next",
+    "finish": "Finish",
+    "allRightsReserved": "All rights reserved."
+  },
+  "auth": {
+    "loginTitle": "Login to AlterLexis",
+    "signupTitle": "Create your AlterLexis account",
+    "forgotPassword": "Forgot password?",
+    "resetPassword": "Reset Password",
+    "noAccount": "Don't have an account?",
+    "alreadyAccount": "Already have an account?",
+    "loginSuccess": "Login successful!",
+    "signupSuccess": "Account created successfully!",
+    "logoutSuccess": "Logout successful.",
+    "resetPasswordSuccess": "A password reset email has been sent."
+  },
+  "homepage": {
+    "title": "AlterLexis: The Key to Knowledge",
+    "subtitle": "Enrich your vocabulary with Reverse Hangman",
+    "gameConfiguratorTitle": "Start a Game",
+    "nativeLanguage": "Your Native Language",
+    "targetLanguage": "Language to Learn",
+    "difficulty": "Difficulty",
+    "selectNativeLanguage": "Select Your Native Language",
+    "selectTargetLanguage": "Select the Language to Learn",
+    "selectDifficulty": "Select Difficulty",
+    "difficultyEasy": "Easy",
+    "difficultyMedium": "Medium",
+    "difficultyHard": "Hard (Premium)",
+    "difficultyCompetitive": "Competitive (Premium)",
+    "startGame": "Start the Game"
+  },
+  "game": {
+    "score": "Score",
+    "gameOver": "Game Over!",
+    "viewDashboard": "View Dashboard",
+    "playAgain": "Play Again",
+    "masteryLevel": "Mastery Level",
+    "finalScoreMessage": "Your final score is {score} points.",
+    "noWordsAvailable": "No words available for this configuration.",
+    "failedToLoadGame": "Failed to load the game.",
+    "listen": "Listen",
+    "showKeyboard": "Show Keyboard",
+    "hideKeyboard": "Hide Keyboard",
+    "yourAnswer": "Your answer...",
+    "hint": "Hint",
+    "definition": "Definition",
+    "masteryStage": "Mastery: {current}/{max}",
+    "nextMasteryLevel": "Correct! Next level.",
+    "wordMastered": "Word Mastered!"
+  },
+  "dashboard": {
+    "title": "Your Dashboard",
+    "totalScore": "Total Score",
+    "wordsMastered": "Words Mastered",
+    "gamesPlayed": "Games Played",
+    "currentStreak": "Current Streak",
+    "yourBadges": "Your Badges",
+    "noBadges": "No badges unlocked yet."
+  },
+  "leaderboard": {
+    "title": "Player Leaderboard",
+    "rank": "Rank",
+    "player": "Player",
+    "score": "Score",
+    "filterByDifficulty": "Filter by difficulty"
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "dashboard": "Admin Dashboard",
+    "users": "User Management",
+    "premiumKeys": "Premium Key Generation",
+    "grantAdminConfirm": "Promote this user to admin?",
+    "revokeAdminConfirm": "Revoke admin privileges from this user?",
+    "wordBank": "Word Bank",
+    "errorLogs": "Error Logs"
+  },
+  "legalPage": {
+    "title": "Legal Notice",
+    "content": "<h2>Editor</h2><p>AlterLexis is a service edited and operated by AlterLexis, an independent software project.</p><h2>Contact</h2><p>For any questions or legal inquiries, you can contact us at the following email address: contact@alterlexis.com (placeholder).</p><h2>Hosting</h2><p>This application is hosted by Firebase Hosting, a service provided by Google Ireland Ltd., with headquarters located at Gordon House, Barrow Street, Dublin 4, Ireland.</p><h2>Intellectual Property</h2><p>All content on the AlterLexis application, including the logo, graphics, text, game mechanics, and underlying technology, is the exclusive property of AlterLexis, unless otherwise stated. Any reproduction, distribution, modification, or publication of these elements is strictly prohibited without prior written consent from AlterLexis.</p>"
+  },
+  "privacyPage": {
+    "title": "Privacy Policy",
+    "content": "<h2>Introduction</h2><p>Welcome to AlterLexis. Your privacy is critically important to us. This Privacy Policy explains what personal data we collect, why we collect it, how we use it, and how you can manage your information.</p><h2>1. Data We Collect</h2><p>To provide and improve our service, we collect the following information:</p><ul><li><strong>Account Information:</strong> When you create an account, we collect your email address and display name. Your password is encrypted and never stored in plain text.</li><li><strong>Usage and Progress Data:</strong> We store data related to your activity on the platform, including your game scores, words mastered, game statistics (streaks, games played), badges earned, and learning preferences (native and target languages).</li><li><strong>Premium Status:</strong> We store the expiration date of your Premium access if you choose to subscribe.</li><li><strong>Technical Data:</strong> We use secure, http-only session cookies solely to keep you logged in. We do not use third-party tracking or advertising cookies.</li></ul><h2>2. How We Use Your Data</h2><p>Your data is used exclusively for the following purposes:</p><ul><li>To provide, operate, and maintain the core functionalities of the AlterLexis service.</li><li>To manage your account, including your progress, statistics, and preferences.</li><li>To personalize your learning experience.</li><li>To grant and manage access to Premium features.</li><li>To ensure the security of our application and prevent fraud.</li></ul><h2>3. Data Storage and Sharing</h2><p>All your data is securely stored on Google Firebase services, a platform known for its robust security measures. <strong>We do not sell, trade, or rent your personal identification information to others.</strong> We only share data with essential service providers like Google (for hosting and database) and Gumroad (for payment processing) for the sole purpose of operating the application.</p><h2>4. Your Rights and Control</h2><p>We believe you should have full control over your data:</p><ul><li><strong>Access and Update:</strong> You can access and update your display name and learning preferences at any time directly from your Profile page.</li><li><strong>Deletion:</strong> You can permanently delete your account and all associated data from the 'Danger Zone' section of your Profile page. This action is irreversible and will remove all your progress and personal information from our systems.</li></ul><h2>5. Policy Towards Children</h2><p>AlterLexis is not directed to individuals under the age of 13. We do not knowingly collect personal information from children under 13. If we become aware that a child under 13 has provided us with personal information, we will take steps to delete such information.</p><h2>6. Changes to This Policy</h2><p>We may update this Privacy Policy from time to time. We will notify you of any significant changes by posting the new policy on this page. We encourage you to review this page periodically for any changes.</p><p><em>Last updated: August 17, 2025</em></p>"
+  },
+  "termsPage": {
+    "title": "Terms of Service",
+    "content": "<h2>1. Agreement to Terms</h2><p>By creating an account and using our application AlterLexis (the “Service”), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Service.</p><h2>2. Accounts</h2><p>When you create an account, you must provide accurate and complete information. You are responsible for safeguarding your password and for any activities or actions that occur under your account. You agree to notify us immediately of any unauthorized use of your account.</p><h2>3. The Service and Freemium Model</h2><p>AlterLexis provides a gamified vocabulary learning service. Our Freemium model includes:</p><ul><li><strong>Guest Access:</strong> Unlimited access to the 'Easy' difficulty level.</li><li><strong>Free Registered Account:</strong> In addition to Guest access, you get to save your statistics and are granted a limited number of daily game plays on the 'Medium' difficulty level.</li><li><strong>Premium Account:</strong> A paid subscription that grants unlimited access to all difficulty levels and features.</li></ul><h2>4. Premium Subscriptions</h2><p>Premium access is granted by redeeming a key purchased through our third-party payment partner, Gumroad. This provides a license to use the Premium features for the duration specified at the time of purchase. As you are purchasing a digital product that is delivered immediately, all sales are final and non-refundable.</p><h2>5. User Conduct</h2><p>You agree not to use the Service to:</p><ul><li>Violate any applicable laws or regulations.</li><li>Attempt to disrupt or compromise the integrity or security of the Service.</li><li>Engage in any form of cheating, exploit any bugs, or use automated scripts to gain an unfair advantage.</li></ul><h2>6. Intellectual Property</h2><p>The Service and its original content (including the word database, visual design, and game mechanics), features, and functionality are and will remain the exclusive property of AlterLexis. Our trademarks and logo may not be used in connection with any product or service without our prior written consent.</p><h2>7. Termination</h2><p>You may terminate your account at any time by using the deletion feature on your Profile page. We may terminate or suspend your account immediately, without prior notice or liability, if you breach these Terms.</p><h2>8. Disclaimer of Warranty</h2><p>The Service is provided on an “AS IS” and “AS AVAILABLE” basis. AlterLexis makes no warranties, express or implied, regarding the operation or availability of the Service, or that it will be uninterrupted or error-free.</p><h2>9. Limitation of Liability</h2><p>In no event shall AlterLexis be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, or other intangible losses, resulting from your access to or use of or inability to access or use the Service.</p><p><em>Last updated: August 17, 2025</em></p>"
+  }
+}

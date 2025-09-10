@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 38% 12%; /* #192A41 - Deep Blue */
+    --foreground: 210 40% 98%; /* #EAEAEA - Light Text */
+
+    --card: 228 29% 20%; /* #242E42 - Card Blue */
+    --card-foreground: 210 40% 98%; /* #EAEAEA - Light Text */
+ 
+    --popover: 228 29% 20%;
+    --popover-foreground: 210 40% 98%;
+ 
+    --primary: 41 78% 68%; /* #E5B359 - Gold Accent */
+    --primary-foreground: 220 38% 12%; /* Deep Blue for text on Gold Accent */
+ 
+    --secondary: 217 33% 50%;
+    --secondary-foreground: 210 40% 98%;
+ 
+    --muted: 217 33% 50%;
+    --muted-foreground: 210 40% 60%; /* rgba(234, 234, 234, 0.6) */
+ 
+    --accent: 217 33% 50%;
+    --accent-foreground: 210 40% 98%;
+ 
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 41 78% 68% / 0.2; /* Gold Accent with 20% opacity */
+    --input: 228 29% 25%; /* Slightly lighter than card-blue */
+    --ring: 41 78% 68%;
+ 
+    --radius: 0.75rem;
+  }
+ 
+  .dark {
+    --background: 220 38% 12%;
+    --foreground: 210 40% 98%;
+
+    --card: 228 29% 20%;
+    --card-foreground: 210 40% 98%;
+ 
+    --popover: 228 29% 20%;
+    --popover-foreground: 210 40% 98%;
+ 
+    --primary: 41 78% 68%;
+    --primary-foreground: 220 38% 12%;
+ 
+    --secondary: 217 33% 50%;
+    --secondary-foreground: 210 40% 98%;
+ 
+    --muted: 217 33% 50%;
+    --muted-foreground: 210 40% 60%;
+ 
+    --accent: 217 33% 50%;
+    --accent-foreground: 210 40% 98%;
+ 
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 41 78% 68% / 0.2;
+    --input: 228 29% 25%;
+    --ring: 41 78% 68%;
+  }
+}
+ 
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
