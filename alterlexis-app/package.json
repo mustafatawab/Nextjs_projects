@@ -43,7 +43,7 @@
     "firebase-functions": "^6.4.0",
     "lucide-react": "^0.309.0",
     "negotiator": "^0.6.3",
-    "next": "14.2.3",
+    "next": "14.2.35",
     "next-intl": "^3.11.1",
     "react": "^18.3.1",
     "react-day-picker": "^8.10.0",
