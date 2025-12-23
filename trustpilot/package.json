@@ -24,7 +24,7 @@
     "country-flag-icons": "^1.5.11",
     "embla-carousel-react": "^8.0.1",
     "lucide-react": "^0.365.0",
-    "next": "14.1.4",
+    "next": "14.2.35",
     "react": "^18",
     "react-country-flag": "^3.1.0",
     "react-dom": "^18",
