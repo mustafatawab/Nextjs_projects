@@ -1,42 +1,53 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { Menu, Search, ShoppingCart, User, X, LogOut, UserCircle } from "lucide-react"
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import {
+  Menu,
+  Search,
+  ShoppingCart,
+  User,
+  X,
+  LogOut,
+  UserCircle,
+} from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { ThemeToggle } from "@/components/theme-toggle"
-import { useCart } from "@/components/cart-provider"
-import { useAuth } from "@/components/auth-provider"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { useCart } from "@/components/cart-provider";
+import { useAuth } from "@/components/auth-provider";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export function Header() {
-  const [isScrolled, setIsScrolled] = useState(false)
-  const [isSearchOpen, setIsSearchOpen] = useState(false)
-  const pathname = usePathname()
-  const { cartItems } = useCart()
-  const { user, signOut, loading } = useAuth()
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const pathname = usePathname();
+  const { cartItems } = useCart();
+  const { user, signOut, loading } = useAuth();
 
-  const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0)
+  const totalItems = cartItems.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10)
-    }
+      setIsScrolled(window.scrollY > 10);
+    };
 
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const navItems = [
     { name: "Home", href: "/" },
@@ -44,49 +55,51 @@ export function Header() {
     { name: "Categories", href: "/categories" },
     { name: "About", href: "/about" },
     { name: "Contact", href: "/contact" },
-  ]
+  ];
 
   const handleSignOut = async () => {
-    await signOut()
-  }
+    await signOut();
+  };
 
   // Get user initials for avatar fallback
   const getUserInitials = () => {
-    if (!user) return "U"
+    if (!user) return "U";
 
-    const firstName = user.user_metadata?.first_name || ""
-    const lastName = user.user_metadata?.last_name || ""
-    const email = user.email || ""
+    const firstName = user.user_metadata?.first_name || "";
+    const lastName = user.user_metadata?.last_name || "";
+    const email = user.email || "";
 
     if (firstName && lastName) {
-      return `${firstName[0]}${lastName[0]}`.toUpperCase()
+      return `${firstName[0]}${lastName[0]}`.toUpperCase();
     } else if (firstName) {
-      return firstName[0].toUpperCase()
+      return firstName[0].toUpperCase();
     } else if (email) {
-      return email[0].toUpperCase()
+      return email[0].toUpperCase();
     }
-    return "U"
-  }
+    return "U";
+  };
 
   const getUserDisplayName = () => {
-    if (!user) return "User"
+    if (!user) return "User";
 
-    const firstName = user.user_metadata?.first_name || ""
-    const lastName = user.user_metadata?.last_name || ""
-    const fullName = user.user_metadata?.full_name || ""
-    const email = user.email || ""
+    const firstName = user.user_metadata?.first_name || "";
+    const lastName = user.user_metadata?.last_name || "";
+    const fullName = user.user_metadata?.full_name || "";
+    const email = user.email || "";
 
-    if (fullName) return fullName
-    if (firstName && lastName) return `${firstName} ${lastName}`
-    if (firstName) return firstName
-    if (email) return email.split("@")[0]
-    return "User"
-  }
+    if (fullName) return fullName;
+    if (firstName && lastName) return `${firstName} ${lastName}`;
+    if (firstName) return firstName;
+    if (email) return email.split("@")[0];
+    return "User";
+  };
 
   return (
     <header
       className={`sticky top-0 z-50 w-full transition-all duration-200 ${
-        isScrolled ? "bg-background/80 backdrop-blur-md border-b" : "bg-transparent"
+        isScrolled
+          ? "bg-background/80 backdrop-blur-md border-b"
+          : "bg-transparent"
       }`}
     >
       <div className="container flex h-16 items-center justify-between px-4">
@@ -105,7 +118,9 @@ export function Header() {
                     key={item.href}
                     href={item.href}
                     className={`text-lg font-medium transition-colors hover:text-primary ${
-                      pathname === item.href ? "text-primary" : "text-muted-foreground"
+                      pathname === item.href
+                        ? "text-primary"
+                        : "text-muted-foreground"
                     }`}
                   >
                     {item.name}
@@ -119,28 +134,28 @@ export function Header() {
                       <div className="space-y-2">
                         <div className="flex items-center gap-3 p-2">
                           <Avatar className="h-8 w-8">
-                            <AvatarImage src={user.user_metadata?.avatar_url || ""} alt={getUserDisplayName()} />
+                            <AvatarImage
+                              src={user.user_metadata?.avatar_url || ""}
+                              alt={getUserDisplayName()}
+                            />
                             <AvatarFallback>{getUserInitials()}</AvatarFallback>
                           </Avatar>
                           <div>
-                            <p className="font-medium text-sm">{getUserDisplayName()}</p>
-                            <p className="text-xs text-muted-foreground">{user.email}</p>
+                            <p className="font-medium text-sm">
+                              {getUserDisplayName()}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {user.email}
+                            </p>
                           </div>
                         </div>
                         <Link
-                          href="#"
+                          href="/profile"
                           className="flex items-center gap-2 text-lg font-medium transition-colors hover:text-primary p-2"
                         >
                           <UserCircle className="h-5 w-5" />
                           Profile
                         </Link>
-                        {/* <Link
-                          href="/orders"
-                          className="flex items-center gap-2 text-lg font-medium transition-colors hover:text-primary p-2"
-                        >
-                          <User className="h-5 w-5" />
-                          Orders
-                        </Link> */}
                         <button
                           onClick={handleSignOut}
                           className="flex items-center gap-2 text-lg font-medium transition-colors hover:text-primary p-2 w-full text-left"
@@ -183,7 +198,9 @@ export function Header() {
                 key={item.href}
                 href={item.href}
                 className={`text-sm font-medium transition-colors hover:text-primary ${
-                  pathname === item.href ? "text-primary" : "text-muted-foreground"
+                  pathname === item.href
+                    ? "text-primary"
+                    : "text-muted-foreground"
                 }`}
               >
                 {item.name}
@@ -195,14 +212,27 @@ export function Header() {
         <div className="flex items-center gap-2">
           {isSearchOpen ? (
             <div className="flex items-center">
-              <Input type="search" placeholder="Search..." className="w-[200px] md:w-[300px] bg-background" autoFocus />
-              <Button variant="ghost" size="icon" onClick={() => setIsSearchOpen(false)}>
+              <Input
+                type="search"
+                placeholder="Search..."
+                className="w-[200px] md:w-[300px] bg-background"
+                autoFocus
+              />
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsSearchOpen(false)}
+              >
                 <X className="h-5 w-5" />
                 <span className="sr-only">Close search</span>
               </Button>
             </div>
           ) : (
-            <Button variant="ghost" size="icon" onClick={() => setIsSearchOpen(true)}>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsSearchOpen(true)}
+            >
               <Search className="h-5 w-5" />
               <span className="sr-only">Search</span>
             </Button>
@@ -228,9 +258,15 @@ export function Header() {
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                    <Button
+                      variant="ghost"
+                      className="relative h-10 w-10 rounded-full"
+                    >
                       <Avatar className="h-10 w-10">
-                        <AvatarImage src={user.user_metadata?.avatar_url || ""} alt={getUserDisplayName()} />
+                        <AvatarImage
+                          src={user.user_metadata?.avatar_url || ""}
+                          alt={getUserDisplayName()}
+                        />
                         <AvatarFallback>{getUserInitials()}</AvatarFallback>
                       </Avatar>
                     </Button>
@@ -239,7 +275,11 @@ export function Header() {
                     <div className="flex items-center justify-start gap-2 p-2">
                       <div className="flex flex-col space-y-1 leading-none">
                         <p className="font-medium">{getUserDisplayName()}</p>
-                        {user.email && <p className="w-[200px] truncate text-sm text-muted-foreground">{user.email}</p>}
+                        {user.email && (
+                          <p className="w-[200px] truncate text-sm text-muted-foreground">
+                            {user.email}
+                          </p>
+                        )}
                       </div>
                     </div>
                     <DropdownMenuSeparator />
@@ -249,9 +289,12 @@ export function Header() {
                         Profile
                       </Link>
                     </DropdownMenuItem>
-                  
+
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">
+                    <DropdownMenuItem
+                      onClick={handleSignOut}
+                      className="cursor-pointer"
+                    >
                       <LogOut className="mr-2 h-4 w-4" />
                       Sign out
                     </DropdownMenuItem>
@@ -274,5 +317,5 @@ export function Header() {
         </div>
       </div>
     </header>
-  )
+  );
 }
