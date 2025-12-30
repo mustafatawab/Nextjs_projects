@@ -1,52 +1,59 @@
-import Image from "next/image"
-import Link from "next/link"
-import { ArrowRight } from "lucide-react"
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 export default function AboutPage() {
   const team = [
     {
       name: "Sophia Reynolds",
       role: "Founder & CEO",
-      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop",
+      image:
+        "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop",
       bio: "With over 15 years in the fragrance industry, Sophia founded Elygance with a vision to create accessible luxury fragrances that tell a story.",
     },
     {
       name: "Marcus Chen",
       role: "Master Perfumer",
-      image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=800&auto=format&fit=crop",
+      image:
+        "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=800&auto=format&fit=crop",
       bio: "Trained in Grasse, France, Marcus brings his exceptional talent and global perspective to create our signature scents.",
     },
     {
       name: "Olivia Patel",
       role: "Creative Director",
-      image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=800&auto=format&fit=crop",
+      image:
+        "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=800&auto=format&fit=crop",
       bio: "Olivia oversees the brand's visual identity and ensures that every aspect of Elygance reflects our commitment to elegance and quality.",
     },
     {
       name: "James Wilson",
       role: "Head of Product Development",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800&auto=format&fit=crop",
+      image:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800&auto=format&fit=crop",
       bio: "James leads our product innovation team, constantly exploring new ingredients and sustainable practices.",
     },
-  ]
+  ];
 
   return (
     <div className="container px-4 py-12 mx-auto">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-3xl font-bold sm:text-4xl md:text-5xl">Our Story</h1>
+          <h1 className="text-3xl font-bold sm:text-4xl md:text-5xl">
+            Our Story
+          </h1>
           <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
-            Discover the passion and craftsmanship behind Elygance, where luxury meets artistry in every bottle.
+            Discover the passion and craftsmanship behind Elygance, where luxury
+            meets artistry in every bottle.
           </p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 items-center mb-16">
           <div className="relative aspect-square">
             <Image
-              src="https://images.unsplash.com/photo-1595425964622-7e3250cb8b66?q=80&w=800&auto=format&fit=crop"
+              src="https://images.unsplash.com/photo-1758225502621-9102d2856dc8?q=80&w=2405&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
               alt="Elygance founder in the perfume laboratory"
               fill
               className="object-cover rounded-lg"
@@ -55,16 +62,18 @@ export default function AboutPage() {
           <div className="space-y-4">
             <h2 className="text-2xl font-semibold">Our Beginning</h2>
             <p className="text-muted-foreground">
-              Founded in 2010, Elygance began as a small boutique in New York City with a simple mission: to create
-              exceptional fragrances that capture moments, memories, and emotions.
+              Founded in 2010, Elygance began as a small boutique in New York
+              City with a simple mission: to create exceptional fragrances that
+              capture moments, memories, and emotions.
             </p>
             <p className="text-muted-foreground">
-              Our founder, Sophia Reynolds, had spent years working with leading perfume houses in Paris before deciding
-              to create a brand that combined traditional craftsmanship with modern sensibilities.
+              Our founder, Sophia Reynolds, had spent years working with leading
+              perfume houses in Paris before deciding to create a brand that
+              combined traditional craftsmanship with modern sensibilities.
             </p>
             <p className="text-muted-foreground">
-              What started as a passion project has grown into a global brand, but our commitment to quality and
-              artistry remains unchanged.
+              What started as a passion project has grown into a global brand,
+              but our commitment to quality and artistry remains unchanged.
             </p>
           </div>
         </div>
@@ -74,8 +83,8 @@ export default function AboutPage() {
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold">Our Philosophy</h2>
           <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
-            At Elygance, we believe that fragrance is more than just a scent—it's an experience, a memory, and a form of
-            self-expression.
+            At Elygance, we believe that fragrance is more than just a
+            scent—it's an experience, a memory, and a form of self-expression.
           </p>
         </div>
 
@@ -99,8 +108,8 @@ export default function AboutPage() {
             </div>
             <h3 className="text-xl font-semibold mb-2">Quality</h3>
             <p className="text-muted-foreground">
-              We source the finest ingredients from around the world, ensuring that each fragrance meets our exacting
-              standards.
+              We source the finest ingredients from around the world, ensuring
+              that each fragrance meets our exacting standards.
             </p>
           </div>
 
@@ -123,8 +132,8 @@ export default function AboutPage() {
             </div>
             <h3 className="text-xl font-semibold mb-2">Sustainability</h3>
             <p className="text-muted-foreground">
-              We are committed to sustainable practices, from responsible sourcing to eco-friendly packaging and
-              cruelty-free testing.
+              We are committed to sustainable practices, from responsible
+              sourcing to eco-friendly packaging and cruelty-free testing.
             </p>
           </div>
 
@@ -147,8 +156,9 @@ export default function AboutPage() {
             </div>
             <h3 className="text-xl font-semibold mb-2">Artistry</h3>
             <p className="text-muted-foreground">
-              We view perfumery as an art form, blending tradition with innovation to create fragrances that tell a
-              story and evoke emotion.
+              We view perfumery as an art form, blending tradition with
+              innovation to create fragrances that tell a story and evoke
+              emotion.
             </p>
           </div>
         </div>
@@ -158,8 +168,8 @@ export default function AboutPage() {
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold">Meet Our Team</h2>
           <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
-            The passionate individuals behind Elygance who bring their expertise and creativity to every fragrance we
-            create.
+            The passionate individuals behind Elygance who bring their expertise
+            and creativity to every fragrance we create.
           </p>
         </div>
 
@@ -186,21 +196,24 @@ export default function AboutPage() {
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold">Our Commitment</h2>
           <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
-            We're dedicated to creating exceptional fragrances while making a positive impact on our community and
-            environment.
+            We're dedicated to creating exceptional fragrances while making a
+            positive impact on our community and environment.
           </p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 items-center mb-16">
           <div className="space-y-4">
-            <h3 className="text-xl font-semibold">Sustainability Initiatives</h3>
+            <h3 className="text-xl font-semibold">
+              Sustainability Initiatives
+            </h3>
             <p className="text-muted-foreground">
-              We're committed to reducing our environmental footprint through sustainable sourcing, eco-friendly
-              packaging, and carbon-neutral shipping.
+              We're committed to reducing our environmental footprint through
+              sustainable sourcing, eco-friendly packaging, and carbon-neutral
+              shipping.
             </p>
             <p className="text-muted-foreground">
-              By 2025, we aim to have 100% recyclable packaging and achieve carbon neutrality across our entire supply
-              chain.
+              By 2025, we aim to have 100% recyclable packaging and achieve
+              carbon neutrality across our entire supply chain.
             </p>
             <Button asChild variant="outline" className="mt-2">
               <Link href="/sustainability">
@@ -231,11 +244,13 @@ export default function AboutPage() {
           <div className="space-y-4 order-1 md:order-2">
             <h3 className="text-xl font-semibold">Community Engagement</h3>
             <p className="text-muted-foreground">
-              We believe in giving back to the communities that support us. Through our Elygance Foundation, we support
-              arts education and environmental conservation efforts.
+              We believe in giving back to the communities that support us.
+              Through our Elygance Foundation, we support arts education and
+              environmental conservation efforts.
             </p>
             <p className="text-muted-foreground">
-              Each year, we donate 5% of our profits to organizations that align with our values and mission.
+              Each year, we donate 5% of our profits to organizations that align
+              with our values and mission.
             </p>
             <Button asChild variant="outline" className="mt-2">
               <Link href="/community">
@@ -247,10 +262,13 @@ export default function AboutPage() {
         </div>
 
         <div className="bg-muted/50 rounded-lg p-8 text-center">
-          <h2 className="text-2xl font-semibold mb-4">Join the Elygance Family</h2>
+          <h2 className="text-2xl font-semibold mb-4">
+            Join the Elygance Family
+          </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto mb-6">
-            Discover our collection of luxury fragrances and become part of our story. Experience the artistry and
-            passion that goes into every bottle.
+            Discover our collection of luxury fragrances and become part of our
+            story. Experience the artistry and passion that goes into every
+            bottle.
           </p>
           <Button asChild size="lg">
             <Link href="/products">Shop Our Collection</Link>
@@ -258,5 +276,5 @@ export default function AboutPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

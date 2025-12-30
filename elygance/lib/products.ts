@@ -34,7 +34,7 @@ export const products = [
       "A warm and sensual fragrance featuring rich amber, spicy cardamom, and creamy sandalwood for a luxurious experience.",
     price: 120.0,
     image:
-      "https://images.unsplash.com/photo-1592945403407-9caf930b2c6c?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1728842942436-03de81e1ab62?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fEdvbGRlbiUyMEFtYmVyJTIwcGVyZnVtZXxlbnwwfHwwfHx8MA%3D%3D",
     category: "Unisex",
     featured: true,
     size: "75ml",
@@ -48,7 +48,7 @@ export const products = [
       "An elegant composition of Bulgarian rose, peony, and patchouli that embodies timeless femininity and grace.",
     price: 95.5,
     image:
-      "https://images.unsplash.com/photo-1557170334-a9086d21c4a9?q=80&w=800&auto=format&fit=crop",
+      "https://plus.unsplash.com/premium_photo-1679106770086-f4355693be1b?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     category: "Women",
     featured: true,
     size: "50ml",
