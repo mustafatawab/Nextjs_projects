@@ -1,97 +1,95 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { Eye, EyeOff } from "lucide-react"
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Eye, EyeOff } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Separator } from "@/components/ui/separator"
-import { useAuth } from "@/components/auth-provider"
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { useAuth } from "@/components/auth-provider";
 import { FaFacebookF } from "react-icons/fa";
 
-
-
-
 export default function SignInPage() {
-  const [showPassword, setShowPassword] = useState(false)
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [rememberMe, setRememberMe] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState("")
+  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const router = useRouter()
-  const { user, signIn, signInWithGoogle, signInWithFacebook } = useAuth()
+  const router = useRouter();
+  const { user, signIn, signInWithGoogle, signInWithFacebook } = useAuth();
 
   // Redirect if already signed in
   useEffect(() => {
     if (user) {
-      router.push("/")
+      router.push("/");
     }
-  }, [user, router])
+  }, [user, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setError("")
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
 
-    const result = await signIn(email, password)
+    const result = await signIn(email, password);
 
     if (result.error) {
-      setError(result.error)
+      setError(result.error);
     } else {
-      router.push("/")
+      router.push("/");
     }
 
-    setIsLoading(false)
-  }
+    setIsLoading(false);
+  };
 
   const handleGoogleSignIn = async () => {
-    setIsLoading(true)
-    setError("")
+    setIsLoading(true);
+    setError("");
 
-    const result = await signInWithGoogle()
+    const result = await signInWithGoogle();
 
     if (result.error) {
-      setError(result.error)
-      setIsLoading(false)
+      setError(result.error);
+      setIsLoading(false);
     }
     // Don't set loading to false here as we're redirecting
-  }
-
+  };
 
   const handleFacebookSignIn = async () => {
-    setIsLoading(true)
-    setError("")
+    setIsLoading(true);
+    setError("");
 
-    const result = await signInWithFacebook()
+    const result = await signInWithFacebook();
 
     if (result.error) {
-      setError(result.error)
-      setIsLoading(false)
+      setError(result.error);
+      setIsLoading(false);
     }
     // Don't set loading to false here as we're redirecting
-  }
+  };
 
   const toggleShowPassword = () => {
-    setShowPassword(!showPassword)
-  }
+    setShowPassword(!showPassword);
+  };
 
   if (user) {
-    return null // Will redirect
+    return null; // Will redirect
   }
 
   return (
     <div className="container px-4 py-12 mx-auto max-w-md">
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold">Sign In</h1>
-        <p className="text-muted-foreground mt-2">Welcome back! Please sign in to your account.</p>
+        <p className="text-muted-foreground mt-2">
+          Welcome back! Please sign in to your account.
+        </p>
       </div>
 
       {error && (
@@ -118,7 +116,10 @@ export default function SignInPage() {
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <Label htmlFor="password">Password</Label>
-            <Link href="/forgot-password" className="text-sm text-primary hover:underline">
+            <Link
+              href="/forgot-password"
+              className="text-sm text-primary hover:underline"
+            >
               Forgot password?
             </Link>
           </div>
@@ -141,8 +142,14 @@ export default function SignInPage() {
               onClick={toggleShowPassword}
               disabled={isLoading}
             >
-              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              <span className="sr-only">{showPassword ? "Hide password" : "Show password"}</span>
+              {showPassword ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
+              <span className="sr-only">
+                {showPassword ? "Hide password" : "Show password"}
+              </span>
             </Button>
           </div>
         </div>
@@ -179,12 +186,19 @@ export default function SignInPage() {
             <Separator />
           </div>
           <div className="relative flex justify-center">
-            <span className="bg-background px-2 text-sm text-muted-foreground">Or continue with</span>
+            <span className="bg-background px-2 text-sm text-muted-foreground">
+              Or continue with
+            </span>
           </div>
         </div>
 
         <div className="mt-6">
-          <Button variant="outline" className="w-full bg-transparent" onClick={handleGoogleSignIn} disabled={isLoading}>
+          <Button
+            variant="outline"
+            className="w-full bg-transparent"
+            onClick={handleGoogleSignIn}
+            disabled={isLoading}
+          >
             <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
               <path
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -207,16 +221,15 @@ export default function SignInPage() {
             {isLoading ? "Signing in..." : "Sign in with Google"}
           </Button>
 
-
-          <div className="mt-6">
+          {/* <div className="mt-6">
           <Button variant="outline" className="w-full bg-transparent" onClick={handleFacebookSignIn} disabled={isLoading}>
           <FaFacebookF className="text-blue-500"/>
 
             {isLoading ? "Signing up..." : "Sign up with Facebook "}
           </Button>
-        </div>
+        </div> */}
         </div>
       </div>
     </div>
-  )
+  );
 }

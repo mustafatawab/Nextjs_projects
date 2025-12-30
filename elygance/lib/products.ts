@@ -5,7 +5,8 @@ export const products = [
     description:
       "A captivating blend of rare orchid, vanilla, and amber that creates an intoxicating aura of mystery and elegance.",
     price: 89.99,
-    image: "https://images.unsplash.com/photo-1594035910387-fea47794261f?q=80&w=800&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1594035910387-fea47794261f?q=80&w=800&auto=format&fit=crop",
     category: "Women",
     featured: true,
     size: "50ml",
@@ -18,7 +19,8 @@ export const products = [
     description:
       "A refreshing aquatic fragrance with notes of sea salt, citrus, and cedar wood, evoking the feeling of a coastal getaway.",
     price: 75.99,
-    image: "https://images.unsplash.com/photo-1595425970377-c9703cf48b6d?q=80&w=800&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1595425970377-c9703cf48b6d?q=80&w=800&auto=format&fit=crop",
     category: "Men",
     featured: true,
     size: "100ml",
@@ -31,7 +33,8 @@ export const products = [
     description:
       "A warm and sensual fragrance featuring rich amber, spicy cardamom, and creamy sandalwood for a luxurious experience.",
     price: 120.0,
-    image: "https://images.unsplash.com/photo-1592945403407-9caf930b2c6c?q=80&w=800&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1592945403407-9caf930b2c6c?q=80&w=800&auto=format&fit=crop",
     category: "Unisex",
     featured: true,
     size: "75ml",
@@ -44,7 +47,8 @@ export const products = [
     description:
       "An elegant composition of Bulgarian rose, peony, and patchouli that embodies timeless femininity and grace.",
     price: 95.5,
-    image: "https://images.unsplash.com/photo-1557170334-a9086d21c4a9?q=80&w=800&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1557170334-a9086d21c4a9?q=80&w=800&auto=format&fit=crop",
     category: "Women",
     featured: true,
     size: "50ml",
@@ -57,7 +61,8 @@ export const products = [
     description:
       "A bold and sophisticated fragrance with notes of leather, tobacco, and spices, perfect for the modern gentleman.",
     price: 110.0,
-    image: "https://images.unsplash.com/photo-1523293182086-7651a899d37f?q=80&w=800&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1523293182086-7651a899d37f?q=80&w=800&auto=format&fit=crop",
     category: "Men",
     featured: true,
     size: "100ml",
@@ -70,7 +75,8 @@ export const products = [
     description:
       "A vibrant blend of zesty citrus, jasmine, and white musk that brings a refreshing energy to any occasion.",
     price: 65.99,
-    image: "https://images.unsplash.com/photo-1547887538-e3a2f32cb1cc?q=80&w=800&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1547887538-e3a2f32cb1cc?q=80&w=800&auto=format&fit=crop",
     category: "Unisex",
     featured: true,
     size: "75ml",
@@ -83,7 +89,8 @@ export const products = [
     description:
       "An opulent fragrance featuring rare oud wood, saffron, and rose for an unforgettable impression of luxury.",
     price: 150.0,
-    image: "https://images.unsplash.com/photo-1585386959984-a4155224a1ad?q=80&w=800&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1585386959984-a4155224a1ad?q=80&w=800&auto=format&fit=crop",
     category: "Unisex",
     featured: false,
     size: "50ml",
@@ -96,7 +103,8 @@ export const products = [
     description:
       "A bright and uplifting scent with neroli, bergamot, and green tea that captures the essence of a Mediterranean garden.",
     price: 79.99,
-    image: "https://images.unsplash.com/photo-1608248597279-f99d160bfcbc?q=80&w=800&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1608248597279-f99d160bfcbc?q=80&w=800&auto=format&fit=crop",
     category: "Women",
     featured: false,
     size: "75ml",
@@ -109,7 +117,8 @@ export const products = [
     description:
       "A warm and woody fragrance with cedar, cinnamon, and tonka bean that exudes confidence and sophistication.",
     price: 85.0,
-    image: "https://images.unsplash.com/photo-1605651531144-51381895e23d?q=80&w=800&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1605651531144-51381895e23d?q=80&w=800&auto=format&fit=crop",
     category: "Men",
     featured: false,
     size: "100ml",
@@ -122,7 +131,8 @@ export const products = [
     description:
       "A comforting blend of Madagascar vanilla, caramel, and musk that wraps you in a warm and sweet embrace.",
     price: 70.0,
-    image: "https://images.unsplash.com/photo-1616949755610-8c9bbc08f138?q=80&w=800&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1616949755610-8c9bbc08f138?q=80&w=800&auto=format&fit=crop",
     category: "Women",
     featured: false,
     size: "50ml",
@@ -135,7 +145,8 @@ export const products = [
     description:
       "A crisp and invigorating fragrance with pine, juniper, and cedarwood that evokes the freshness of a mountain forest.",
     price: 80.0,
-    image: "https://images.unsplash.com/photo-1605651531144-51381895e23d?q=80&w=800&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1605651531144-51381895e23d?q=80&w=800&auto=format&fit=crop",
     category: "Men",
     featured: false,
     size: "75ml",
@@ -148,7 +159,8 @@ export const products = [
     description:
       "An enchanting floral fragrance with jasmine, tuberose, and ylang-ylang that blooms like flowers under the moonlight.",
     price: 90.0,
-    image: "https://images.unsplash.com/photo-1615484477778-ca3b77940c25?q=80&w=800&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1615484477778-ca3b77940c25?q=80&w=800&auto=format&fit=crop",
     category: "Women",
     featured: false,
     size: "50ml",
@@ -161,7 +173,8 @@ export const products = [
     description:
       "A bold and distinctive fragrance with leather, black pepper, and cardamom that makes a powerful statement.",
     price: 95.0,
-    image: "https://images.unsplash.com/photo-1523293182086-7651a899d37f?q=80&w=800&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1523293182086-7651a899d37f?q=80&w=800&auto=format&fit=crop",
     category: "Men",
     featured: false,
     size: "100ml",
@@ -174,7 +187,8 @@ export const products = [
     description:
       "A clean and ethereal scent with white musk, lily of the valley, and cotton that feels like a second skin.",
     price: 65.0,
-    image: "https://images.unsplash.com/photo-1617897903246-719242758050?q=80&w=800&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1617897903246-719242758050?q=80&w=800&auto=format&fit=crop",
     category: "Unisex",
     featured: false,
     size: "75ml",
@@ -187,11 +201,12 @@ export const products = [
     description:
       "A luxurious and exotic fragrance with saffron, rose, and agarwood that transports you to distant lands.",
     price: 130.0,
-    image: "https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=800&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=800&auto=format&fit=crop",
     category: "Unisex",
     featured: false,
     size: "50ml",
     notes: ["Saffron", "Rose", "Agarwood", "Patchouli"],
     rating: 4.9,
   },
-]
+];
