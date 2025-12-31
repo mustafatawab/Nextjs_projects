@@ -107,8 +107,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(session.user);
         storeUserData(session.user, session);
 
-        // Ensure profile exists
-        await ensureProfileExists(session.user);
+        // Ensure profile exists (don't await this to avoid blocking UI)
+        ensureProfileExists(session.user);
 
         if (event === "SIGNED_IN") {
           toast({
