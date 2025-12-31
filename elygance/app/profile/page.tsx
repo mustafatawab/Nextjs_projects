@@ -23,7 +23,7 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
 
-  const { user } = useAuth();
+  const { user, updatePassword, updateProfile } = useAuth();
   const router = useRouter();
   const { toast } = useToast();
 
@@ -70,32 +70,20 @@ export default function ProfilePage() {
         return;
       }
 
-      const updates: any = {
-        data: {
-          first_name: firstName,
-          last_name: lastName,
-        },
-      };
-
-      if (password) {
-        updates.password = password;
-      }
-
-      // Update Auth User
-      const { error: authError } = await supabase.auth.updateUser(updates);
-
-      if (authError) throw authError;
-
-      // Update Profiles Table
-      const { error: profileError } = await supabase.from("profiles").upsert({
-        id: user?.id,
-        first_name: firstName,
-        last_name: lastName,
-        email: email, // ensure email is kept in sync
-        updated_at: new Date().toISOString(),
+      // 1. Update Profile (Names)
+      const { error: profileError } = await updateProfile({
+        firstName,
+        lastName,
+        email,
       });
 
-      if (profileError) throw profileError;
+      if (profileError) throw new Error(profileError);
+
+      // 2. Update Password if provided
+      if (password) {
+        const { error: authError } = await updatePassword(password);
+        if (authError) throw new Error(authError);
+      }
 
       toast({
         title: "Success",

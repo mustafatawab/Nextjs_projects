@@ -25,6 +25,12 @@ type AuthContextType = {
   signInWithGoogle: () => Promise<{ error?: string }>;
   signInWithFacebook: () => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
+  updatePassword: (password: string) => Promise<{ error?: string }>;
+  updateProfile: (data: {
+    firstName: string;
+    lastName: string;
+    email: string;
+  }) => Promise<{ error?: string }>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -276,6 +282,70 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const updatePassword = async (password: string) => {
+    try {
+      const { error } = await supabase.auth.updateUser({ password });
+
+      if (error) {
+        return { error: error.message };
+      }
+      return {};
+    } catch (error) {
+      return { error: "An unexpected error occurred" };
+    }
+  };
+
+  const updateProfile = async ({
+    firstName,
+    lastName,
+    email,
+  }: {
+    firstName: string;
+    lastName: string;
+    email: string;
+  }) => {
+    try {
+      // 1. Update Auth User Metadata
+      const { error: authError } = await supabase.auth.updateUser({
+        data: {
+          first_name: firstName,
+          last_name: lastName,
+          full_name: `${firstName} ${lastName}`,
+        },
+      });
+
+      if (authError) return { error: authError.message };
+
+      // 2. Update Profiles Table
+      const { error: profileError } = await supabase.from("profiles").upsert({
+        id: user?.id,
+        first_name: firstName,
+        last_name: lastName,
+        email: email,
+        updated_at: new Date().toISOString(),
+      });
+
+      if (profileError) return { error: profileError.message };
+
+      // Update local user state to reflect changes immediately
+      if (user) {
+        setUser({
+          ...user,
+          user_metadata: {
+            ...user.user_metadata,
+            first_name: firstName,
+            last_name: lastName,
+            full_name: `${firstName} ${lastName}`,
+          },
+        });
+      }
+
+      return {};
+    } catch (error: any) {
+      return { error: error.message || "An unexpected error occurred" };
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -287,6 +357,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         signInWithGoogle,
         signInWithFacebook,
         signOut,
+        updatePassword,
+        updateProfile,
       }}
     >
       {children}
