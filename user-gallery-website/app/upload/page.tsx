@@ -1,20 +1,31 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Switch } from "@/components/ui/switch"
-import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
-import { Upload, X, ImageIcon, CheckCircle } from "lucide-react"
-import { useRouter } from "next/navigation"
-import Image from "next/image"
-import { mockCurrentUser, type ImageData } from "@/lib/mock-data"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Upload, X, ImageIcon, CheckCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { mockCurrentUser, type ImageData } from "@/lib/mock-data";
+
+import { createClient } from "@/lib/supabase/client";
+import { useEffect } from "react";
+
+import { toast } from "sonner";
 
 export default function UploadPage() {
   const [formData, setFormData] = useState({
@@ -23,13 +34,29 @@ export default function UploadPage() {
     tags: "",
     isPublished: true,
     category: "nature",
-  })
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([])
-  const [previewUrls, setPreviewUrls] = useState<string[]>([])
-  const [uploading, setUploading] = useState(false)
-  const [uploadProgress, setUploadProgress] = useState(0)
-  const [uploadComplete, setUploadComplete] = useState(false)
-  const router = useRouter()
+  });
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadComplete, setUploadComplete] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const router = useRouter();
+  const supabase = createClient();
+
+  useEffect(() => {
+    const getUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      setUser(user);
+      if (!user) {
+        toast.error("Please sign in to access this page");
+        router.push("/auth/login");
+      }
+    };
+    getUser();
+  }, [supabase, router]);
 
   const categories = [
     "nature",
@@ -43,88 +70,102 @@ export default function UploadPage() {
     "travel",
     "fashion",
     "lifestyle",
-  ]
+  ];
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || [])
+    const files = Array.from(e.target.files || []);
     if (files.length > 0) {
-      setSelectedFiles((prev) => [...prev, ...files])
+      setSelectedFiles((prev) => [...prev, ...files]);
 
       files.forEach((file) => {
-        const reader = new FileReader()
+        const reader = new FileReader();
         reader.onload = (e) => {
-          const result = e.target?.result as string
-          setPreviewUrls((prev) => [...prev, result])
-        }
-        reader.readAsDataURL(file)
-      })
+          const result = e.target?.result as string;
+          setPreviewUrls((prev) => [...prev, result]);
+        };
+        reader.readAsDataURL(file);
+      });
     }
-  }
+  };
 
   const removeFile = (index: number) => {
-    setSelectedFiles((prev) => prev.filter((_, i) => i !== index))
-    setPreviewUrls((prev) => prev.filter((_, i) => i !== index))
-  }
+    setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
+    setPreviewUrls((prev) => prev.filter((_, i) => i !== index));
+  };
 
   const handleInputChange = (field: string, value: string | boolean) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-  }
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
 
   const parseTags = (tagString: string) => {
     return tagString
       .split(",")
       .map((tag) => tag.trim())
-      .filter((tag) => tag.length > 0)
-  }
+      .filter((tag) => tag.length > 0);
+  };
 
   const handleUpload = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (selectedFiles.length === 0 || !formData.title) return
+    e.preventDefault();
+    if (selectedFiles.length === 0 || !formData.title || !user) {
+      if (!user) toast.error("Please sign in to upload images");
+      return;
+    }
 
-    setUploading(true)
-    setUploadProgress(0)
+    setUploading(true);
+    setUploadProgress(0);
 
-    // Simulate upload progress
-    const interval = setInterval(() => {
-      setUploadProgress((prev) => {
-        if (prev >= 90) {
-          clearInterval(interval)
-          return 90
-        }
-        return prev + 10
-      })
-    }, 200)
+    try {
+      const totalFiles = selectedFiles.length;
 
-    // Process images and save to localStorage
-    setTimeout(() => {
-      const newImages: ImageData[] = selectedFiles.map((file, index) => ({
-        id: `uploaded-${Date.now()}-${index}`,
-        title: selectedFiles.length === 1 ? formData.title : `${formData.title} ${index + 1}`,
-        description: formData.description,
-        image_url: previewUrls[index],
-        is_published: formData.isPublished,
-        created_at: new Date().toISOString(),
-        user: mockCurrentUser,
-        tags: parseTags(formData.tags),
-        category: formData.category,
-      }))
+      for (let i = 0; i < selectedFiles.length; i++) {
+        const file = selectedFiles[i];
+        const fileExt = file.name.split(".").pop();
+        const fileName = `${Math.random()}.${fileExt}`;
+        const filePath = `${user.id}/${fileName}`;
 
-      // Save to localStorage
-      const existingImages = JSON.parse(localStorage.getItem("uploadedImages") || "[]")
-      const updatedImages = [...newImages, ...existingImages]
-      localStorage.setItem("uploadedImages", JSON.stringify(updatedImages))
+        // 1. Upload to Supabase Storage
+        const { error: uploadError, data } = await supabase.storage
+          .from("gallery")
+          .upload(filePath, file);
 
-      // Dispatch custom event to notify other components
-      window.dispatchEvent(new Event("imageUploaded"))
+        if (uploadError) throw uploadError;
 
-      setUploadProgress(100)
-      setUploadComplete(true)
+        // 2. Get Public URL
+        const {
+          data: { publicUrl },
+        } = supabase.storage.from("gallery").getPublicUrl(filePath);
+
+        // 3. Save metadata to Database
+        const { error: dbError } = await supabase.from("images").insert({
+          user_id: user.id,
+          title:
+            totalFiles === 1 ? formData.title : `${formData.title} ${i + 1}`,
+          description: formData.description,
+          image_url: publicUrl,
+          is_published: formData.isPublished,
+          tags: parseTags(formData.tags),
+          category: formData.category,
+        });
+
+        if (dbError) throw dbError;
+
+        setUploadProgress(Math.round(((i + 1) / totalFiles) * 100));
+      }
+
+      setUploadComplete(true);
+      toast.success(`Successfully uploaded ${selectedFiles.length} image(s)!`);
+      window.dispatchEvent(new Event("imageUploaded"));
 
       setTimeout(() => {
-        router.push("/")
-      }, 2000)
-    }, 2000)
-  }
+        router.push("/");
+      }, 2000);
+    } catch (error: any) {
+      console.error("Upload error:", error.message);
+      toast.error("Error uploading images: " + error.message);
+    } finally {
+      setUploading(false);
+    }
+  };
 
   if (uploadComplete) {
     return (
@@ -132,10 +173,14 @@ export default function UploadPage() {
         <Card className="w-full max-w-md text-center">
           <CardContent className="pt-6">
             <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Upload Complete!</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              Upload Complete!
+            </h2>
             <p className="text-gray-600 mb-4">
-              Your {selectedFiles.length} image{selectedFiles.length !== 1 ? "s have" : " has"} been successfully
-              uploaded and {formData.isPublished ? "published" : "saved as draft"}.
+              Your {selectedFiles.length} image
+              {selectedFiles.length !== 1 ? "s have" : " has"} been successfully
+              uploaded and{" "}
+              {formData.isPublished ? "published" : "saved as draft"}.
             </p>
             <div className="flex space-x-2 justify-center">
               <Button onClick={() => router.push("/")}>View Gallery</Button>
@@ -146,15 +191,19 @@ export default function UploadPage() {
           </CardContent>
         </Card>
       </div>
-    )
+    );
   }
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Upload Images</h1>
-          <p className="text-gray-600">Share your photography with the community</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Upload Images
+          </h1>
+          <p className="text-gray-600">
+            Share your photography with the community
+          </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -163,7 +212,9 @@ export default function UploadPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Image Details</CardTitle>
-                <CardDescription>Add information about your images</CardDescription>
+                <CardDescription>
+                  Add information about your images
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleUpload} className="space-y-6">
@@ -174,14 +225,24 @@ export default function UploadPage() {
                       <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center hover:border-gray-400 transition-colors cursor-pointer">
                         <Upload className="mx-auto h-16 w-16 text-gray-400 mb-4" />
                         <div className="space-y-2">
-                          <Label htmlFor="file-upload" className="cursor-pointer">
+                          <Label
+                            htmlFor="file-upload"
+                            className="cursor-pointer"
+                          >
                             <span className="text-blue-600 hover:text-blue-500 text-lg font-medium">
                               Click to upload
                             </span>
-                            <span className="text-gray-600"> or drag and drop</span>
+                            <span className="text-gray-600">
+                              {" "}
+                              or drag and drop
+                            </span>
                           </Label>
-                          <p className="text-sm text-gray-500">PNG, JPG, GIF up to 10MB each</p>
-                          <p className="text-xs text-gray-400">You can upload multiple images at once</p>
+                          <p className="text-sm text-gray-500">
+                            PNG, JPG, GIF up to 10MB each
+                          </p>
+                          <p className="text-xs text-gray-400">
+                            You can upload multiple images at once
+                          </p>
                         </div>
                         <Input
                           id="file-upload"
@@ -215,7 +276,10 @@ export default function UploadPage() {
                                 <X className="h-3 w-3" />
                               </Button>
                               <div className="absolute bottom-2 left-2 right-2">
-                                <Badge variant="secondary" className="text-xs truncate w-full">
+                                <Badge
+                                  variant="secondary"
+                                  className="text-xs truncate w-full"
+                                >
                                   {selectedFiles[index]?.name}
                                 </Badge>
                               </div>
@@ -223,9 +287,19 @@ export default function UploadPage() {
                           ))}
                         </div>
                         <div className="flex items-center justify-between">
-                          <p className="text-sm text-gray-600">{selectedFiles.length} image(s) selected</p>
-                          <Label htmlFor="file-upload-more" className="cursor-pointer">
-                            <Button type="button" variant="outline" size="sm" asChild>
+                          <p className="text-sm text-gray-600">
+                            {selectedFiles.length} image(s) selected
+                          </p>
+                          <Label
+                            htmlFor="file-upload-more"
+                            className="cursor-pointer"
+                          >
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              asChild
+                            >
                               <span>Add More</span>
                             </Button>
                           </Label>
@@ -249,12 +323,16 @@ export default function UploadPage() {
                       <Input
                         id="title"
                         value={formData.title}
-                        onChange={(e) => handleInputChange("title", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("title", e.target.value)
+                        }
                         placeholder="Enter image title"
                         required
                       />
                       {selectedFiles.length > 1 && (
-                        <p className="text-xs text-gray-500">Numbers will be added for multiple images</p>
+                        <p className="text-xs text-gray-500">
+                          Numbers will be added for multiple images
+                        </p>
                       )}
                     </div>
                     <div className="space-y-2">
@@ -262,7 +340,9 @@ export default function UploadPage() {
                       <select
                         id="category"
                         value={formData.category}
-                        onChange={(e) => handleInputChange("category", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("category", e.target.value)
+                        }
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       >
                         {categories.map((cat) => (
@@ -279,7 +359,9 @@ export default function UploadPage() {
                     <Textarea
                       id="description"
                       value={formData.description}
-                      onChange={(e) => handleInputChange("description", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("description", e.target.value)
+                      }
                       placeholder="Describe your images, the story behind them, or technical details..."
                       rows={4}
                     />
@@ -290,7 +372,9 @@ export default function UploadPage() {
                     <Input
                       id="tags"
                       value={formData.tags}
-                      onChange={(e) => handleInputChange("tags", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("tags", e.target.value)
+                      }
                       placeholder="nature, landscape, sunset, mountains (comma separated)"
                     />
                     {formData.tags && (
@@ -308,11 +392,17 @@ export default function UploadPage() {
                     <Switch
                       id="publish"
                       checked={formData.isPublished}
-                      onCheckedChange={(checked) => handleInputChange("isPublished", checked)}
+                      onCheckedChange={(checked) =>
+                        handleInputChange("isPublished", checked)
+                      }
                     />
                     <Label htmlFor="publish">Publish immediately</Label>
                     <span className="text-sm text-gray-500">
-                      ({formData.isPublished ? "Will be visible to everyone" : "Save as draft"})
+                      (
+                      {formData.isPublished
+                        ? "Will be visible to everyone"
+                        : "Save as draft"}
+                      )
                     </span>
                   </div>
 
@@ -329,11 +419,15 @@ export default function UploadPage() {
                   <Button
                     type="submit"
                     className="w-full"
-                    disabled={uploading || selectedFiles.length === 0 || !formData.title}
+                    disabled={
+                      uploading || selectedFiles.length === 0 || !formData.title
+                    }
                   >
                     {uploading
                       ? "Processing..."
-                      : `Upload ${selectedFiles.length} Image${selectedFiles.length !== 1 ? "s" : ""}`}
+                      : `Upload ${selectedFiles.length} Image${
+                          selectedFiles.length !== 1 ? "s" : ""
+                        }`}
                   </Button>
                 </form>
               </CardContent>
@@ -352,19 +446,30 @@ export default function UploadPage() {
               <CardContent className="space-y-4 text-sm">
                 <div>
                   <h4 className="font-medium mb-1">Image Quality</h4>
-                  <p className="text-gray-600">Upload high-resolution images for the best viewing experience.</p>
+                  <p className="text-gray-600">
+                    Upload high-resolution images for the best viewing
+                    experience.
+                  </p>
                 </div>
                 <div>
                   <h4 className="font-medium mb-1">File Formats</h4>
-                  <p className="text-gray-600">Supported formats: JPEG, PNG, GIF. Maximum size: 10MB per image.</p>
+                  <p className="text-gray-600">
+                    Supported formats: JPEG, PNG, GIF. Maximum size: 10MB per
+                    image.
+                  </p>
                 </div>
                 <div>
                   <h4 className="font-medium mb-1">Tags</h4>
-                  <p className="text-gray-600">Use relevant tags to help others discover your work.</p>
+                  <p className="text-gray-600">
+                    Use relevant tags to help others discover your work.
+                  </p>
                 </div>
                 <div>
                   <h4 className="font-medium mb-1">Multiple Images</h4>
-                  <p className="text-gray-600">Upload multiple images at once - they'll be numbered automatically.</p>
+                  <p className="text-gray-600">
+                    Upload multiple images at once - they'll be numbered
+                    automatically.
+                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -384,7 +489,8 @@ export default function UploadPage() {
                     <span className="font-medium">Session Only</span>
                   </div>
                   <p className="text-xs text-gray-500 mt-2">
-                    Images are stored locally in your browser. They will persist until you clear your browser data.
+                    Images are stored locally in your browser. They will persist
+                    until you clear your browser data.
                   </p>
                 </div>
               </CardContent>
@@ -393,5 +499,5 @@ export default function UploadPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

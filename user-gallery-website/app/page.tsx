@@ -1,56 +1,74 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Heart, Search, Filter, Camera, Sparkles } from "lucide-react"
-import Image from "next/image"
-import { mockImages, type ImageData } from "@/lib/mock-data"
+import { useState, useEffect } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Heart, Search, Filter, Camera, Sparkles } from "lucide-react";
+import { mockImages, type ImageData } from "@/lib/mock-data";
+import Image from "next/image";
+import { createClient } from "@/lib/supabase/client";
 
 export default function HomePage() {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState("all")
-  const [likedImages, setLikedImages] = useState<Set<string>>(new Set())
-  const [uploadedImages, setUploadedImages] = useState<ImageData[]>([])
-  const [allImages, setAllImages] = useState<ImageData[]>(mockImages)
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [likedImages, setLikedImages] = useState<Set<string>>(new Set());
+  const [dbImages, setDbImages] = useState<ImageData[]>([]);
+  const [allImages, setAllImages] = useState<ImageData[]>(mockImages);
+  const supabase = createClient();
 
-  // Load uploaded images from localStorage on component mount
+  // Load images from Supabase and combine with mock images
   useEffect(() => {
-    const savedImages = localStorage.getItem("uploadedImages")
-    if (savedImages) {
-      const parsed = JSON.parse(savedImages)
-      setUploadedImages(parsed)
-      // Combine uploaded images with mock images, uploaded images first
-      setAllImages([...parsed, ...mockImages])
-    }
-  }, [])
+    const fetchImages = async () => {
+      const { data, error } = await supabase
+        .from("images")
+        .select("*")
+        .order("created_at", { ascending: false });
 
-  // Listen for new uploads from other components
-  useEffect(() => {
-    const handleStorageChange = () => {
-      const savedImages = localStorage.getItem("uploadedImages")
-      if (savedImages) {
-        const parsed = JSON.parse(savedImages)
-        setUploadedImages(parsed)
-        setAllImages([...parsed, ...mockImages])
+      if (error) {
+        console.error("Error fetching images:", error.message);
+        return;
       }
-    }
 
-    window.addEventListener("storage", handleStorageChange)
-    // Also listen for custom event when upload happens in same tab
-    window.addEventListener("imageUploaded", handleStorageChange)
+      if (data) {
+        // Add fallback user data if user object is missing from DB record
+        const dataWithUser = data.map((img: any) => ({
+          ...img,
+          user: img.user || {
+            username: "User",
+            full_name: "Gallery Member",
+            avatar_url: "/placeholder.svg",
+          },
+        }));
 
+        setDbImages(dataWithUser);
+        // Combine DB images with mock images, DB images first
+        setAllImages([...dataWithUser, ...mockImages]);
+      }
+    };
+
+    fetchImages();
+
+    const handleUploadEvent = () => {
+      fetchImages();
+    };
+
+    window.addEventListener("imageUploaded", handleUploadEvent);
     return () => {
-      window.removeEventListener("storage", handleStorageChange)
-      window.removeEventListener("imageUploaded", handleStorageChange)
-    }
-  }, [])
+      window.removeEventListener("imageUploaded", handleUploadEvent);
+    };
+  }, [supabase]);
 
-  const publishedImages = allImages.filter((image) => image.is_published)
+  const publishedImages = allImages.filter((image) => image.is_published);
 
   // Enhanced search functionality
   const filteredImages = publishedImages.filter((image) => {
@@ -60,22 +78,26 @@ export default function HomePage() {
       image.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
       image.user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
       image.user.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (image.tags && image.tags.some((tag) => tag.toLowerCase().includes(searchTerm.toLowerCase())))
+      (image.tags &&
+        image.tags.some((tag) =>
+          tag.toLowerCase().includes(searchTerm.toLowerCase())
+        ));
 
-    const matchesCategory = selectedCategory === "all" || image.category === selectedCategory
+    const matchesCategory =
+      selectedCategory === "all" || image.category === selectedCategory;
 
-    return matchesSearch && matchesCategory
-  })
+    return matchesSearch && matchesCategory;
+  });
 
   const toggleLike = (imageId: string) => {
-    const newLikedImages = new Set(likedImages)
+    const newLikedImages = new Set(likedImages);
     if (newLikedImages.has(imageId)) {
-      newLikedImages.delete(imageId)
+      newLikedImages.delete(imageId);
     } else {
-      newLikedImages.add(imageId)
+      newLikedImages.add(imageId);
     }
-    setLikedImages(newLikedImages)
-  }
+    setLikedImages(newLikedImages);
+  };
 
   const categories = [
     { value: "all", label: "All Categories" },
@@ -87,7 +109,7 @@ export default function HomePage() {
     { value: "macro", label: "Macro" },
     { value: "wildlife", label: "Wildlife" },
     { value: "lifestyle", label: "Lifestyle" },
-  ]
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
@@ -95,10 +117,13 @@ export default function HomePage() {
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center">
-            <h1 className="text-5xl font-bold text-gray-900 mb-6">Discover Amazing Photography</h1>
+            <h1 className="text-5xl font-bold text-gray-900 mb-6">
+              Discover Amazing Photography
+            </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-              Explore a curated collection of stunning images from talented photographers around the world. Share your
-              own work and connect with a community of visual storytellers.
+              Explore a curated collection of stunning images from talented
+              photographers around the world. Share your own work and connect
+              with a community of visual storytellers.
             </p>
 
             {/* Search and Filter Bar */}
@@ -117,7 +142,10 @@ export default function HomePage() {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <div className="flex items-center space-x-2">
                   <Filter className="h-4 w-4 text-gray-500" />
-                  <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                  <Select
+                    value={selectedCategory}
+                    onValueChange={setSelectedCategory}
+                  >
                     <SelectTrigger className="w-48">
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
@@ -135,8 +163,8 @@ export default function HomePage() {
                   <Button
                     variant="outline"
                     onClick={() => {
-                      setSearchTerm("")
-                      setSelectedCategory("all")
+                      setSearchTerm("");
+                      setSelectedCategory("all");
                     }}
                     className="text-sm"
                   >
@@ -176,10 +204,13 @@ export default function HomePage() {
                     ? `Search Results (${filteredImages.length})`
                     : `Featured Gallery (${filteredImages.length})`}
                 </h2>
-                {uploadedImages.length > 0 && (
-                  <Badge variant="secondary" className="flex items-center space-x-1">
+                {dbImages.length > 0 && (
+                  <Badge
+                    variant="secondary"
+                    className="flex items-center space-x-1"
+                  >
                     <Sparkles className="h-3 w-3" />
-                    <span>{uploadedImages.length} Your Images</span>
+                    <span>{dbImages.length} Your Images</span>
                   </Badge>
                 )}
               </div>
@@ -211,7 +242,7 @@ export default function HomePage() {
                     <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300" />
 
                     {/* Show "Your Upload" badge for uploaded images */}
-                    {uploadedImages.some((uploaded) => uploaded.id === image.id) && (
+                    {dbImages.some((uploaded) => uploaded.id === image.id) && (
                       <div className="absolute top-3 left-3">
                         <Badge className="bg-green-500 hover:bg-green-600 text-white">
                           <Sparkles className="h-3 w-3 mr-1" />
@@ -224,11 +255,17 @@ export default function HomePage() {
                       size="sm"
                       variant="ghost"
                       className={`absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
-                        likedImages.has(image.id) ? "text-red-500" : "text-white hover:text-red-500"
+                        likedImages.has(image.id)
+                          ? "text-red-500"
+                          : "text-white hover:text-red-500"
                       }`}
                       onClick={() => toggleLike(image.id)}
                     >
-                      <Heart className={`h-5 w-5 ${likedImages.has(image.id) ? "fill-current" : ""}`} />
+                      <Heart
+                        className={`h-5 w-5 ${
+                          likedImages.has(image.id) ? "fill-current" : ""
+                        }`}
+                      />
                     </Button>
                   </div>
                   <CardContent className="p-4">
@@ -236,14 +273,20 @@ export default function HomePage() {
                       {image.title}
                     </h3>
                     {image.description && (
-                      <p className="text-gray-600 text-sm mb-3 line-clamp-2">{image.description}</p>
+                      <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                        {image.description}
+                      </p>
                     )}
 
                     {/* Tags */}
                     {image.tags && image.tags.length > 0 && (
                       <div className="flex flex-wrap gap-1 mb-3">
                         {image.tags.slice(0, 3).map((tag, index) => (
-                          <Badge key={index} variant="outline" className="text-xs">
+                          <Badge
+                            key={index}
+                            variant="outline"
+                            className="text-xs"
+                          >
                             #{tag}
                           </Badge>
                         ))}
@@ -258,14 +301,20 @@ export default function HomePage() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <Avatar className="h-7 w-7">
-                          <AvatarImage src={image.user.avatar_url || "/placeholder.svg"} />
+                          <AvatarImage
+                            src={image.user.avatar_url || "/placeholder.svg"}
+                          />
                           <AvatarFallback className="text-xs bg-blue-100 text-blue-600">
                             {image.user.username.charAt(0).toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
                         <div className="flex flex-col">
-                          <span className="text-sm font-medium text-gray-900">{image.user.username}</span>
-                          <span className="text-xs text-gray-500">{image.user.full_name}</span>
+                          <span className="text-sm font-medium text-gray-900">
+                            {image.user.username}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            {image.user.full_name}
+                          </span>
                         </div>
                       </div>
                       <div className="flex flex-col items-end">
@@ -273,7 +322,10 @@ export default function HomePage() {
                           {new Date(image.created_at).toLocaleDateString()}
                         </Badge>
                         {image.category && (
-                          <Badge variant="outline" className="text-xs capitalize">
+                          <Badge
+                            variant="outline"
+                            className="text-xs capitalize"
+                          >
                             {image.category}
                           </Badge>
                         )}
@@ -287,5 +339,5 @@ export default function HomePage() {
         )}
       </div>
     </div>
-  )
+  );
 }

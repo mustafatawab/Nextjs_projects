@@ -1,17 +1,26 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
-import { Checkbox } from "@/components/ui/checkbox"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { Camera, Mail, Lock, User, Github } from "lucide-react"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Checkbox } from "@/components/ui/checkbox";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Camera, Mail, Lock, User, Github } from "lucide-react";
+
+import { createClient } from "@/lib/supabase/client";
+import { toast } from "sonner";
 
 export default function SignUpPage() {
   const [formData, setFormData] = useState({
@@ -21,46 +30,78 @@ export default function SignUpPage() {
     username: "",
     fullName: "",
     agreeToTerms: false,
-  })
-  const [loading, setLoading] = useState(false)
-  const [errors, setErrors] = useState<Record<string, string>>({})
-  const router = useRouter()
+  });
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const router = useRouter();
+  const supabase = createClient();
 
   const handleInputChange = (field: string, value: string | boolean) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
+    setFormData((prev) => ({ ...prev, [field]: value }));
     // Clear error when user starts typing
     if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: "" }))
+      setErrors((prev) => ({ ...prev, [field]: "" }));
     }
-  }
+  };
 
   const validateForm = () => {
-    const newErrors: Record<string, string> = {}
+    const newErrors: Record<string, string> = {};
 
-    if (!formData.fullName.trim()) newErrors.fullName = "Full name is required"
-    if (!formData.username.trim()) newErrors.username = "Username is required"
-    if (!formData.email.trim()) newErrors.email = "Email is required"
-    if (formData.password.length < 6) newErrors.password = "Password must be at least 6 characters"
-    if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = "Passwords don't match"
-    if (!formData.agreeToTerms) newErrors.agreeToTerms = "You must agree to the terms"
+    if (!formData.fullName.trim()) newErrors.fullName = "Full name is required";
+    if (!formData.username.trim()) newErrors.username = "Username is required";
+    if (!formData.email.trim()) newErrors.email = "Email is required";
+    if (formData.password.length < 6)
+      newErrors.password = "Password must be at least 6 characters";
+    if (formData.password !== formData.confirmPassword)
+      newErrors.confirmPassword = "Passwords don't match";
+    if (!formData.agreeToTerms)
+      newErrors.agreeToTerms = "You must agree to the terms";
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    if (!validateForm()) return
+    if (!validateForm()) return;
 
-    setLoading(true)
+    setLoading(true);
 
-    // Simulate signup process
-    setTimeout(() => {
-      setLoading(false)
-      router.push("/auth/login")
-    }, 2000)
-  }
+    const { error } = await supabase.auth.signUp({
+      email: formData.email,
+      password: formData.password,
+      options: {
+        data: {
+          full_name: formData.fullName,
+          username: formData.username,
+        },
+      },
+    });
+
+    if (error) {
+      toast.error(error.message);
+      setLoading(false);
+    } else {
+      toast.success(
+        "Account created successfully! Please check your email for verification."
+      );
+      router.push("/auth/login");
+    }
+  };
+
+  const handleSocialLogin = async (provider: "google" | "github") => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+
+    if (error) {
+      toast.error(error.message);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-pink-100 py-12 px-4 sm:px-6 lg:px-8">
@@ -73,13 +114,17 @@ export default function SignUpPage() {
             </div>
           </div>
           <h2 className="text-3xl font-bold text-gray-900">Join Gallery</h2>
-          <p className="mt-2 text-gray-600">Create your account and start sharing</p>
+          <p className="mt-2 text-gray-600">
+            Create your account and start sharing
+          </p>
         </div>
 
         <Card className="shadow-xl border-0">
           <CardHeader className="text-center pb-4">
             <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
-            <CardDescription>Join our community of photographers</CardDescription>
+            <CardDescription>
+              Join our community of photographers
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <form onSubmit={handleSignUp} className="space-y-4">
@@ -94,31 +139,41 @@ export default function SignUpPage() {
                       id="fullName"
                       type="text"
                       value={formData.fullName}
-                      onChange={(e) => handleInputChange("fullName", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("fullName", e.target.value)
+                      }
                       placeholder="John Doe"
                       className="pl-10"
                       required
                     />
                   </div>
-                  {errors.fullName && <p className="text-red-500 text-xs">{errors.fullName}</p>}
+                  {errors.fullName && (
+                    <p className="text-red-500 text-xs">{errors.fullName}</p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="username" className="text-sm font-medium">
                     Username
                   </Label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm">@</span>
+                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm">
+                      @
+                    </span>
                     <Input
                       id="username"
                       type="text"
                       value={formData.username}
-                      onChange={(e) => handleInputChange("username", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("username", e.target.value)
+                      }
                       placeholder="johndoe"
                       className="pl-8"
                       required
                     />
                   </div>
-                  {errors.username && <p className="text-red-500 text-xs">{errors.username}</p>}
+                  {errors.username && (
+                    <p className="text-red-500 text-xs">{errors.username}</p>
+                  )}
                 </div>
               </div>
 
@@ -138,7 +193,9 @@ export default function SignUpPage() {
                     required
                   />
                 </div>
-                {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
+                {errors.email && (
+                  <p className="text-red-500 text-xs">{errors.email}</p>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -151,17 +208,24 @@ export default function SignUpPage() {
                     id="password"
                     type="password"
                     value={formData.password}
-                    onChange={(e) => handleInputChange("password", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("password", e.target.value)
+                    }
                     placeholder="Create a password"
                     className="pl-10"
                     required
                   />
                 </div>
-                {errors.password && <p className="text-red-500 text-xs">{errors.password}</p>}
+                {errors.password && (
+                  <p className="text-red-500 text-xs">{errors.password}</p>
+                )}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword" className="text-sm font-medium">
+                <Label
+                  htmlFor="confirmPassword"
+                  className="text-sm font-medium"
+                >
                   Confirm Password
                 </Label>
                 <div className="relative">
@@ -170,33 +234,49 @@ export default function SignUpPage() {
                     id="confirmPassword"
                     type="password"
                     value={formData.confirmPassword}
-                    onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("confirmPassword", e.target.value)
+                    }
                     placeholder="Confirm your password"
                     className="pl-10"
                     required
                   />
                 </div>
-                {errors.confirmPassword && <p className="text-red-500 text-xs">{errors.confirmPassword}</p>}
+                {errors.confirmPassword && (
+                  <p className="text-red-500 text-xs">
+                    {errors.confirmPassword}
+                  </p>
+                )}
               </div>
 
               <div className="flex items-center space-x-2">
                 <Checkbox
                   id="terms"
                   checked={formData.agreeToTerms}
-                  onCheckedChange={(checked) => handleInputChange("agreeToTerms", checked as boolean)}
+                  onCheckedChange={(checked) =>
+                    handleInputChange("agreeToTerms", checked as boolean)
+                  }
                 />
                 <label htmlFor="terms" className="text-sm text-gray-600">
                   I agree to the{" "}
-                  <a href="#" className="text-purple-600 hover:text-purple-500 font-medium">
+                  <a
+                    href="#"
+                    className="text-purple-600 hover:text-purple-500 font-medium"
+                  >
                     Terms of Service
                   </a>{" "}
                   and{" "}
-                  <a href="#" className="text-purple-600 hover:text-purple-500 font-medium">
+                  <a
+                    href="#"
+                    className="text-purple-600 hover:text-purple-500 font-medium"
+                  >
                     Privacy Policy
                   </a>
                 </label>
               </div>
-              {errors.agreeToTerms && <p className="text-red-500 text-xs">{errors.agreeToTerms}</p>}
+              {errors.agreeToTerms && (
+                <p className="text-red-500 text-xs">{errors.agreeToTerms}</p>
+              )}
 
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? "Creating account..." : "Create Account"}
@@ -208,12 +288,18 @@ export default function SignUpPage() {
                 <Separator className="w-full" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white px-2 text-gray-500">Or continue with</span>
+                <span className="bg-white px-2 text-gray-500">
+                  Or continue with
+                </span>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-              <Button variant="outline" className="w-full bg-transparent">
+              <Button
+                variant="outline"
+                className="w-full bg-transparent"
+                onClick={() => handleSocialLogin("google")}
+              >
                 <svg className="h-4 w-4 mr-2" viewBox="0 0 24 24">
                   <path
                     fill="currentColor"
@@ -234,7 +320,11 @@ export default function SignUpPage() {
                 </svg>
                 Google
               </Button>
-              <Button variant="outline" className="w-full bg-transparent">
+              <Button
+                variant="outline"
+                className="w-full bg-transparent"
+                onClick={() => handleSocialLogin("github")}
+              >
                 <Github className="h-4 w-4 mr-2" />
                 GitHub
               </Button>
@@ -242,7 +332,10 @@ export default function SignUpPage() {
 
             <div className="text-center text-sm">
               Already have an account?{" "}
-              <Link href="/auth/login" className="font-medium text-purple-600 hover:text-purple-500">
+              <Link
+                href="/auth/login"
+                className="font-medium text-purple-600 hover:text-purple-500"
+              >
                 Sign in
               </Link>
             </div>
@@ -250,5 +343,5 @@ export default function SignUpPage() {
         </Card>
       </div>
     </div>
-  )
+  );
 }
