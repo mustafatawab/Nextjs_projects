@@ -1,36 +1,161 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+```
+npm install prisma tsx @types/pg --save-dev
+npm install @prisma/client @prisma/adapter-pg dotenv pg
 
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+npx prisma init --db --output ../app/generated/prisma
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+**Define Your Schema** in schema.prisma <br>
+```prisma
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
 
-To learn more about Next.js, take a look at the following resources:
+datasource db {
+  provider = "postgresql"
+}
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+model User {
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  name  String?
+  posts Post[]
+}
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+model Post {
+  id        Int     @id @default(autoincrement())
+  title     String
+  content   String?
+  published Boolean @default(false)
+  authorId  Int
+  author    User    @relation(fields: [authorId], references: [id])
+}
 
-## Deploy on Vercel
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**prisma.config.ts** <br>
+```typescript
+
+import 'dotenv/config'
+import { defineConfig } from 'prisma/config';
+
+export default defineConfig({
+  schema: 'prisma/schema.prisma',
+  migrations: {
+    path: 'prisma/migrations'
+  },
+  datasource: {
+    url: process.env.DATABASE_URL!,
+  },
+});
+
+
+```
+
+
+Run **Migrations** <br>
+
+```
+npx prisma migrate dev --name init
+```
+
+```
+npx prisma generate
+```
+
+
+
+### Seed the database
+
+**prisma/seed.ts**
+<br>
+```typescript
+import { PrismaClient, Prisma } from "../app/generated/prisma/client";
+import { PrismaPg } from '@prisma/adapter-pg'
+import 'dotenv/config'
+
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL,
+})
+
+const prisma = new PrismaClient({
+  adapter,
+});
+
+const userData: Prisma.UserCreateInput[] = [
+  {
+    name: "Alice",
+    email: "alice@prisma.io",
+    posts: {
+      create: [
+        {
+          title: "Join the Prisma Discord",
+          content: "https://pris.ly/discord",
+          published: true,
+        },
+        {
+          title: "Prisma on YouTube",
+          content: "https://pris.ly/youtube",
+        },
+      ],
+    },
+  },
+  {
+    name: "Bob",
+    email: "bob@prisma.io",
+    posts: {
+      create: [
+        {
+          title: "Follow Prisma on Twitter",
+          content: "https://www.twitter.com/prisma",
+          published: true,
+        },
+      ],
+    },
+  },
+];
+
+export async function main() {
+  for (const u of userData) {
+    await prisma.user.create({ data: u });
+  }
+}
+
+main();
+
+```
+
+
+
+
+Inside the **prisma.config.ts** 
+```typescript
+import 'dotenv/config'
+import { defineConfig, env } from 'prisma/config';
+
+export default defineConfig({
+  schema: 'prisma/schema.prisma',
+  migrations: {
+    path: 'prisma/migrations',
+    seed: `tsx prisma/seed.ts`,
+  },
+  datasource: {
+    url: env('DATABASE_URL'),
+  },
+});
+```
+
+
+
+Run the **Seeds**
+
+```
+npx prisma db seed
+```
