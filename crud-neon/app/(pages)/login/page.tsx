@@ -1,32 +1,89 @@
 "use client";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { UserPlus, Mail, Lock, User, Sparkles, LogIn } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { toast } from "react-hot-toast";
 
 const page = () => {
-  const [isLoading, setIsLoading] = useState();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [form, setForm] = useState({
-    name: "",
     email: "",
     password: "",
-    confirmPassword: "",
   });
 
-  const onHandleChange = (e: any) => {
+  const onHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+
     setForm((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
-  const handleSubmit = () => {
-    console.log("Form submition is working");
+  const userLoging = async () => {
+    return await fetch("/api/auth/login", {
+      method: "POST",
+      body: JSON.stringify(form),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        setForm({
+          email: "",
+          password: "",
+        });
+        console.log(res);
+        toast.success("You are logged in");
+      })
+      .catch((error) => {
+        toast.error(error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    if (!form.email || !form.password) {
+      toast.error("All fields are required !!!");
+      return;
+    }
+
+    await userLoging();
+
+    // try {
+    //   toast.promise(
+    //     fetch("/api/auth/login", {
+    //       method: "POST",
+    //       headers: { "Content-Type": "application/json" },
+    //       body: JSON.stringify(form),
+    //     }).then(async (res) => {
+    //       const data = await res.json();
+    //       return data;
+    //     }),
+
+    //     {
+    //       loading: "Logging.....",
+    //       success: <b>You are logged in!</b>,
+    //       error: <b>Something went wrong.</b>,
+    //     }
+    //   );
+    //   setForm({
+    //     email: "",
+    //     password: "",
+    //   });
+    // } catch (err) {
+    //   toast.error(err as string);
+    // } finally {
+    //   setIsLoading(false);
+    // }
+  };
+
   return (
     <div className="min-h-screen gradient-subtle flex items-center justify-center px-4">
       <motion.div
@@ -55,8 +112,6 @@ const page = () => {
           className="glass-card rounded-2xl p-8 shadow-card"
         >
           <form onSubmit={handleSubmit} className="space-y-5">
-            
-
             <div className="space-y-2">
               <Label htmlFor="email" className="text-foreground">
                 Email
@@ -66,6 +121,7 @@ const page = () => {
                 <Input
                   id="email"
                   type="email"
+                  name="email"
                   placeholder="you@example.com"
                   value={form.email}
                   onChange={onHandleChange}
@@ -83,6 +139,7 @@ const page = () => {
                 <Input
                   id="password"
                   type="password"
+                  name="password"
                   placeholder="••••••••"
                   value={form.password}
                   onChange={onHandleChange}

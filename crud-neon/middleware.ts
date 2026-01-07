@@ -3,15 +3,14 @@ import type { NextRequest } from "next/server";
 
 export function middleware(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
-console.log(token)
+  console.log(token);
   if (!token) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  return NextResponse.next()
-  
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/((?!login|signup|api|_next|favicon.ico).*)"],
+  matcher: ["/((?!login|register|api|_next|favicon.ico).*)"],
 };

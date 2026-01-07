@@ -1,14 +1,18 @@
-"use client"
-import React, { useState } from "react";
+"use client";
+import React, { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { UserPlus, Mail, Lock, User, Sparkles } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const page = () => {
-  const [isLoading, setIsLoading] = useState();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const router = useRouter();
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -16,7 +20,7 @@ const page = () => {
     confirmPassword: "",
   });
 
-  const onHandleChange = (e: any) => {
+  const onHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({
       ...prev,
@@ -24,9 +28,36 @@ const page = () => {
     }));
   };
 
-  const handleSubmit = () => {
-    console.log("Form submition is working");
+  const handleSubmit = async (e: React.FormEvent) => {
+    setIsLoading(true);
+    e.preventDefault();
+    if (!form.name || !form.email || !form.password || !form.confirmPassword) {
+      toast.error("All Fields are required");
+      return;
+    }
+    await fetch("/api/auth/register", {
+      method: "POST",
+      body: JSON.stringify(form),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        toast.success("You are registered");
+        router.push("/login");
+        setForm({
+          name: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+        });
+      })
+      .catch((error) => {
+        toast.error(error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
+
   return (
     <div className="min-h-screen gradient-subtle flex items-center justify-center px-4">
       <motion.div
@@ -54,7 +85,7 @@ const page = () => {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="glass-card rounded-2xl p-8 shadow-card"
         >
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form ref={ref} onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
               <Label htmlFor="name" className="text-foreground">
                 Full Name
@@ -63,6 +94,7 @@ const page = () => {
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="name"
+                  name="name"
                   type="text"
                   placeholder="John Doe"
                   value={form.name}
@@ -80,6 +112,7 @@ const page = () => {
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="email"
+                  name="email"
                   type="email"
                   placeholder="you@example.com"
                   value={form.email}
@@ -97,6 +130,7 @@ const page = () => {
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="password"
+                  name="password"
                   type="password"
                   placeholder="••••••••"
                   value={form.password}
@@ -109,8 +143,7 @@ const page = () => {
               </p>
             </div>
 
-
-             <div className="space-y-2">
+            <div className="space-y-2">
               <Label htmlFor="confirmPassword" className="text-foreground">
                 Confirm Password
               </Label>
@@ -118,6 +151,7 @@ const page = () => {
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="confirmPassword"
+                  name="confirmPassword"
                   type="confirmPassword"
                   placeholder="••••••••"
                   value={form.confirmPassword}

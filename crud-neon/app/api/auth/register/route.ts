@@ -15,13 +15,13 @@ export async function POST(request: NextRequest) {
   const prisma = new PrismaClient();
 
   const existingUser = await prisma.user.findUnique({
-    where: { email },
+    where: { email : email },
   });
 
   if (existingUser) {
     return NextResponse.json(
       { message: "Email already exists" },
-      { status: 500 }
+      { status: 401 }
     );
   }
 
@@ -39,5 +39,5 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(user);
   }
 
-  return NextResponse.json({ message: "something went wrong" } , {status : 500});
+  return NextResponse.json({ message: "something went wrong" } , {status : 401});
 }
