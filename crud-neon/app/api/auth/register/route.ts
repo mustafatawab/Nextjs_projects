@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Prisma, PrismaClient } from "@/app/generated/prisma/client";
+import {  PrismaClient } from "@/app/generated/prisma/client";
 import bcrypt from "bcrypt";
-import { Jwt } from "jsonwebtoken";
+
 
 
 

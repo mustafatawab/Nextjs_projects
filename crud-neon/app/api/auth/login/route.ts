@@ -1,8 +1,8 @@
 import { NextResponse, NextRequest } from "next/server";
 import bcrypt from "bcrypt";
 import { PrismaClient } from "@/app/generated/prisma/client";
-import jwt from 'jsonwebtoken'
-
+import jwt from "jsonwebtoken";
+import { cookies } from "next/headers";
 
 export async function GET() {
   return NextResponse.json({ status: "healthy" });
@@ -33,8 +33,28 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const secret = process.env.JWT_SECRET || "taskflow"
-  const token = jwt.sign(user , secret , { expiresIn : "5h"})
+  const secret = process.env.JWT_SECRET || "taskflow";
+  const token = await jwt.sign(user, secret, { expiresIn: "5h" });
 
-  return NextResponse.json({ user , token });
+  //   const thiscookie = await cookies();
+
+  //   thiscookie.set({
+  //     name: "token",
+  //     value: token,
+  //     httpOnly: true,
+  //     maxAge: 60 * 60 * 24 * 7,
+  //   });
+
+  const response = NextResponse.json({ token });
+
+  response.cookies.set("token", token, {
+    httpOnly: true,
+    maxAge: 60 * 60 * 24 * 7, // 7 days
+  });
+
+  if (response.cookies.get("token")?.value) {
+    return response;
+  }
+
+  return NextResponse.json({ error: "Error occured" });
 }
