@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Prisma, PrismaClient } from "@/app/generated/prisma/client";
 import bcrypt from "bcrypt";
+import { Jwt } from "jsonwebtoken";
+
+
 
 export async function GET(request: NextRequest) {
   return NextResponse.json({ status: "healthy" });
@@ -36,5 +39,5 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(user);
   }
 
-  return NextResponse.json({ status: "healthy" });
+  return NextResponse.json({ message: "something went wrong" } , {status : 500});
 }
