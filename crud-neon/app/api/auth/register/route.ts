@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import {  PrismaClient } from "@/app/generated/prisma/client";
+import { PrismaClient } from "@/app/generated/prisma/client";
 import bcrypt from "bcrypt";
-
-
-
 
 export async function GET(request: NextRequest) {
   return NextResponse.json({ status: "healthy" });
@@ -15,7 +12,7 @@ export async function POST(request: NextRequest) {
   const prisma = new PrismaClient();
 
   const existingUser = await prisma.user.findUnique({
-    where: { email : email },
+    where: { email: email },
   });
 
   if (existingUser) {
@@ -25,6 +22,12 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  if (password != confirmPassword) {
+    return NextResponse.json(
+      { message: "Password does not match" },
+      { status: 401 }
+    );
+  }
   const hashPassword = await bcrypt.hash(password, 10);
 
   const user = await prisma.user.create({
@@ -39,5 +42,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(user);
   }
 
-  return NextResponse.json({ message: "something went wrong" } , {status : 401});
+  return NextResponse.json(
+    { message: "something went wrong" },
+    { status: 401 }
+  );
 }

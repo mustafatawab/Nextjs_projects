@@ -1,15 +1,28 @@
 "use client";
 import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { UserPlus, Mail, Lock, User, Sparkles, LogIn } from "lucide-react";
+import {
+  UserPlus,
+  Mail,
+  Lock,
+  Unlock,
+  User,
+  Sparkles,
+  LogIn,
+} from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const page = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [showPass, setShowPass] = useState<boolean>(false);
+
+  const router = useRouter();
+
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -24,28 +37,6 @@ const page = () => {
     }));
   };
 
-  const userLoging = async () => {
-    return await fetch("/api/auth/login", {
-      method: "POST",
-      body: JSON.stringify(form),
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        setForm({
-          email: "",
-          password: "",
-        });
-        console.log(res);
-        toast.success("You are logged in");
-      })
-      .catch((error) => {
-        toast.error(error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -54,34 +45,33 @@ const page = () => {
       return;
     }
 
-    await userLoging();
-
-    // try {
-    //   toast.promise(
-    //     fetch("/api/auth/login", {
-    //       method: "POST",
-    //       headers: { "Content-Type": "application/json" },
-    //       body: JSON.stringify(form),
-    //     }).then(async (res) => {
-    //       const data = await res.json();
-    //       return data;
-    //     }),
-
-    //     {
-    //       loading: "Logging.....",
-    //       success: <b>You are logged in!</b>,
-    //       error: <b>Something went wrong.</b>,
-    //     }
-    //   );
-    //   setForm({
-    //     email: "",
-    //     password: "",
-    //   });
-    // } catch (err) {
-    //   toast.error(err as string);
-    // } finally {
-    //   setIsLoading(false);
-    // }
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (res.status !== 200) {
+        toast.error(data.message);
+        return;
+        // throw new Error("Loggin Failed");
+      }
+      setForm({
+        email: "",
+        password: "",
+      });
+      console.log("Success Response ", data);
+      toast.success("You are logged in");
+      router.push("/");
+    } catch (error) {
+      console.log("Error ", error);
+      toast.error(error as string);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -135,10 +125,19 @@ const page = () => {
                 Password
               </Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <div
+                  className="cursor-pointer"
+                  onClick={() => setShowPass(!showPass)}
+                >
+                  {showPass ? (
+                    <Unlock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  ) : (
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  )}
+                </div>
                 <Input
                   id="password"
-                  type="password"
+                  type={showPass ? "text" : "password"}
                   name="password"
                   placeholder="••••••••"
                   value={form.password}

@@ -1,7 +1,7 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { UserPlus, Mail, Lock, User, Sparkles } from "lucide-react";
+import { UserPlus, Mail, Lock, Unlock, User, Sparkles } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,9 @@ import { useRouter } from "next/navigation";
 
 const page = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [showPass, setShowPass] = useState<boolean>(false);
+  const [showConfirmPass, setShowConfirmPass] = useState<boolean>(false);
+
   const router = useRouter();
 
   const [form, setForm] = useState({
@@ -29,33 +32,42 @@ const page = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    setIsLoading(true);
     e.preventDefault();
+    if (form.password !== form.confirmPassword) {
+      toast.error("Password Does Not Match");
+      return;
+    }
+
     if (!form.name || !form.email || !form.password || !form.confirmPassword) {
       toast.error("All Fields are required");
       return;
     }
-    await fetch("/api/auth/register", {
-      method: "POST",
-      body: JSON.stringify(form),
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        toast.success("You are registered");
-        router.push("/login");
-        setForm({
-          name: "",
-          email: "",
-          password: "",
-          confirmPassword: "",
-        });
-      })
-      .catch((error) => {
-        toast.error(error);
-      })
-      .finally(() => {
-        setIsLoading(false);
+
+    setIsLoading(true);
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        body: JSON.stringify(form),
       });
+      const data = await res.json();
+
+      if (res.status != 200) {
+        toast.error(data.message);
+        return;
+      }
+      toast.success("You are registered");
+      router.push("/login");
+      setForm({
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
+    } catch (error) {
+      toast.error(error as string);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -85,7 +97,7 @@ const page = () => {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="glass-card rounded-2xl p-8 shadow-card"
         >
-          <form ref={ref} onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
               <Label htmlFor="name" className="text-foreground">
                 Full Name
@@ -127,11 +139,20 @@ const page = () => {
                 Password
               </Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <div
+                  className="cursor-pointer"
+                  onClick={() => setShowPass(!showPass)}
+                >
+                  {showPass ? (
+                    <Unlock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  ) : (
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  )}
+                </div>
                 <Input
                   id="password"
                   name="password"
-                  type="password"
+                  type={showPass ? "text" : "password"}
                   placeholder="••••••••"
                   value={form.password}
                   onChange={onHandleChange}
@@ -148,19 +169,29 @@ const page = () => {
                 Confirm Password
               </Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <div
+                  className="cursor-pointer"
+                  onClick={() => setShowConfirmPass(!showConfirmPass)}
+                >
+                  {showConfirmPass ? (
+                    <Unlock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  ) : (
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  )}
+                </div>
                 <Input
                   id="confirmPassword"
                   name="confirmPassword"
-                  type="confirmPassword"
+                  type={showConfirmPass ? "text" : "password"}
                   placeholder="••••••••"
                   value={form.confirmPassword}
                   onChange={onHandleChange}
                   className="pl-10 h-12 bg-background/50 border-border/50 focus:border-primary"
                 />
               </div>
+
               <p className="text-xs text-muted-foreground">
-                Must be at least 6 characters
+                Password Must Match
               </p>
             </div>
 
@@ -184,7 +215,7 @@ const page = () => {
           </form>
 
           <div className="mt-6 text-center text-sm text-muted-foreground">
-            Already have an account?{" "}
+            Already have an account?
             <Link
               href="/login"
               className="text-primary font-medium hover:underline"

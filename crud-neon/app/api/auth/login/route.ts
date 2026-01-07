@@ -14,13 +14,13 @@ export async function POST(request: NextRequest) {
   const prisma = new PrismaClient();
 
   const user = await prisma.user.findUnique({
-    where: { email },
+    where: { email: email },
   });
 
   if (!user) {
     return NextResponse.json(
       { message: "Register yourself first" },
-      { status: 501 }
+      { status: 400 }
     );
   }
 
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
   if (!matchPassword) {
     return NextResponse.json(
       { message: "Incorrect Password" },
-      { status: 501 }
+      { status: 401 }
     );
   }
 
