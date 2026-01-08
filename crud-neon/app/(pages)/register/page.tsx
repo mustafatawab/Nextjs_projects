@@ -43,7 +43,6 @@ const page = () => {
       return;
     }
 
-
     try {
       await register(form);
       toast.success("You are registered");
@@ -56,7 +55,7 @@ const page = () => {
       });
     } catch (error) {
       toast.error("Registration Failed ");
-    } 
+    }
     // try {
     //   const res = await fetch("/api/auth/register", {
     //     method: "POST",
@@ -211,7 +210,7 @@ const page = () => {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-medium shadow-button"
+              className="w-full h-12 gradient-warm shadow-soft transition-smooth hover:shadow-glow bg-primary hover:bg-primary/90 text-primary-foreground font-medium shadow-button"
             >
               {loading ? (
                 <span className="flex items-center gap-2">

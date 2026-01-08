@@ -1,15 +1,16 @@
-import React, { useState } from 'react'
-import { Input } from './ui/input'
-import { Button } from './ui/button'
-import { Plus } from 'lucide-react';
+import React, { FormEvent, useState } from "react";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
+import { Plus } from "lucide-react";
 
-const TodoInput = () => {
-    const [text , setText] = useState('')
+const TodoInput = ({ onAdd }: { onAdd: (text: string) => void }) => {
+  const [text, setText] = useState("");
 
-    const handleSubmit = async () => {
-        console.log("----- Submitting -----")
-
-    }
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    console.log("----- Submitting -----");
+    onAdd(text);
+  };
   return (
     <form onSubmit={handleSubmit} className="flex gap-3">
       <Input
@@ -27,7 +28,7 @@ const TodoInput = () => {
         <span className="sr-only">Add task</span>
       </Button>
     </form>
-  )
-}
+  );
+};
 
-export default TodoInput
+export default TodoInput;

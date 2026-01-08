@@ -9,6 +9,11 @@ import TodoInput from "@/components/TodoInput";
 import TodoList from "@/components/TodoList";
 
 const Home = () => {
+
+
+  const addTodo = async (text: string) => {
+    console.log("User entered the  " , text)
+  }
   return (
     <div className="min-h-screen gradient-subtle mt-20">
       <div className="container mx-auto max-w-xl px-4 py-12">
@@ -36,7 +41,7 @@ const Home = () => {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="space-y-6"
         >
-          <TodoInput />
+          <TodoInput onAdd={addTodo}/>
           <TodoList />
         </motion.main>
       </div>

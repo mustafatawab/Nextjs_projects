@@ -166,7 +166,7 @@ const page = () => {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-medium shadow-button"
+              className="w-full h-12 gradient-warm shadow-soft transition-smooth hover:shadow-glow bg-primary hover:bg-primary/90 text-primary-foreground font-medium shadow-button"
             >
               {loading ? (
                 <span className="flex items-center gap-2">

@@ -7,11 +7,13 @@ import {
   useEffect,
   ReactNode,
 } from "react";
+import { useRouter } from "next/navigation";
 
 type User = {
   id: string;
   name: string;
   email: string;
+  createdAt: string;
 };
 
 type AuthContextType = {
@@ -34,6 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const saved = localStorage.getItem("auth");
@@ -53,7 +56,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [user, token]);
 
   async function login(email: string, password: string) {
-    setLoading(true)
+    setLoading(true);
 
     const res = await fetch("/api/auth/login", {
       method: "POST",
@@ -64,12 +67,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const data = await res.json();
 
     if (!res.ok) {
+      setLoading(false);
       throw new Error("Invalid Credentails");
     }
 
     setUser(data.user);
     setToken(data.token);
-    setLoading(false)
+    setLoading(false);
   }
 
   async function register(payload: {
@@ -78,7 +82,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     password: string;
     confirmPassword: string;
   }) {
-    setLoading(true)
+    setLoading(true);
     const res = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -88,29 +92,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const data = await res.json();
 
     if (!res.ok) {
+      setLoading(false);
       throw new Error("Registration failed");
     }
 
     setUser(data.user);
     setToken(data.token);
-    
-    setLoading(false)
+
+    setLoading(false);
   }
 
   async function logout() {
-    setLoading(true)
+    setLoading(true);
     const res = await fetch("/api/auth/logout", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
     });
 
     if (!res.ok) {
+      setLoading(false);
       throw new Error("Logout Failed");
     }
 
     setUser(null);
     setToken(null);
-    setLoading(false)
+    setLoading(false);
+    router.push("/login");
   }
 
   return (
