@@ -13,6 +13,10 @@ export async function POST(request: NextRequest) {
 
   const prisma = new PrismaClient();
 
+  if (!email || !password){
+    return NextResponse.json({message : "Email and Password are required"} , {status : 400})
+  }
+
   const user = await prisma.user.findUnique({
     where: { email: email },
   });
@@ -24,7 +28,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const matchPassword = await bcrypt.compare(password, user.password);
+  const matchPassword = await bcrypt.compare(password, user.password!);
 
   if (!matchPassword) {
     return NextResponse.json(
@@ -32,9 +36,14 @@ export async function POST(request: NextRequest) {
       { status: 401 }
     );
   }
+  
 
-  const secret = process.env.JWT_SECRET || "taskflow";
-  const token = await jwt.sign(user, secret, { expiresIn: "5h" });
+  const payload = {
+    userId : user.id,
+    email : user.email
+  }
+  const secret = process.env.JWT_SECRET!;
+  const token = await jwt.sign(payload, secret, { expiresIn: "5h" });
 
   //   const thiscookie = await cookies();
 

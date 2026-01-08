@@ -1,17 +1,26 @@
 import { NextRequest } from "next/server";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
-export async function getUserFromRequest(request: NextRequest) {
+
+type JwtPayload = {
+  userId: string;
+  email: string;
+};
+
+export async function getAuthUser() {
   const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value;
+  const token = await cookieStore.get("token")?.value;
 
   if (!token) {
-    throw new Error("Not authenticated");
+    return null;
   }
 
-  const secret = process.env.JWT_SECRET || "taskflow";
+  const secret = process.env.JWT_SECRET!;
 
-  const isVerified = jwt.verify(token, secret);
-
-  return isVerified;
+  try {
+    const decoded = jwt.verify(token, secret) as JwtPayload;
+    return decoded;
+  } catch (error) {
+    throw new Error("Invalid Token");
+  }
 }

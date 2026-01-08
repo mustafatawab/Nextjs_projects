@@ -10,18 +10,14 @@ const page = () => {
   const router = useRouter();
   const { user, logout } = useAuth();
 
-
-
   if (!user) return null;
 
   const initials = user.name
-    .split(' ')
+    .split(" ")
     .map((n) => n[0])
-    .join('')
+    .join("")
     .toUpperCase()
     .slice(0, 2);
-
-
 
   return (
     <div className="min-h-screen gradient-subtle px-4 py-8">
