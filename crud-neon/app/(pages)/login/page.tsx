@@ -16,11 +16,12 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/authContext";
 
 const page = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  // const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showPass, setShowPass] = useState<boolean>(false);
-
+  const { login, loading } = useAuth()
   const router = useRouter();
 
   const [form, setForm] = useState({
@@ -39,39 +40,51 @@ const page = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
     if (!form.email || !form.password) {
       toast.error("All fields are required !!!");
       return;
     }
 
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(form),
-      });
-      const data = await res.json();
-      if (res.status !== 200) {
-        toast.error(data.message);
-        return;
-        // throw new Error("Loggin Failed");
-      }
+      await login(form.email, form.password)
+      toast.success("You are Logged In")
+      router.push("/")
       setForm({
-        email: "",
-        password: "",
-      });
-      console.log("Success Response ", data);
-      toast.success("You are logged in");
-      router.push("/");
+        email : "",
+        password: ""
+      })
     } catch (error) {
-      console.log("Error ", error);
-      toast.error(error as string);
+      toast.error("Check your credentials")
     } finally {
-      setIsLoading(false);
     }
+
+    // try {
+    //   const res = await fetch("/api/auth/login", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(form),
+    //   });
+    //   const data = await res.json();
+    //   if (res.status !== 200) {
+    //     toast.error(data.message);
+    //     return;
+    //     // throw new Error("Loggin Failed");
+    //   }
+    //   setForm({
+    //     email: "",
+    //     password: "",
+    //   });
+    //   console.log("Success Response ", data);
+    //   toast.success("You are logged in");
+    //   router.push("/");
+    // } catch (error) {
+    //   console.log("Error ", error);
+    //   toast.error(error as string);
+    // } finally {
+    //   setIsLoading(false);
+    // }
   };
 
   return (
@@ -152,10 +165,10 @@ const page = () => {
 
             <Button
               type="submit"
-              disabled={isLoading}
+              disabled={loading}
               className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-medium shadow-button"
             >
-              {isLoading ? (
+              {loading ? (
                 <span className="flex items-center gap-2">
                   <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
                   Loggin in...

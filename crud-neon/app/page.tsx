@@ -1,11 +1,12 @@
-'use client'
+"use client";
 import ContactForm from "@/components/form";
 import DataTable from "@/components/formdata";
 import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Sparkles } from "lucide-react";
-
+import TodoInput from "@/components/TodoInput";
+import TodoList from "@/components/TodoList";
 
 const Home = () => {
   return (
@@ -35,28 +36,8 @@ const Home = () => {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="space-y-6"
         >
-          {/* <TodoInput onAdd={addTodo} /> */}
-
-          {/* <div className="flex flex-wrap items-center justify-between gap-4">
-            <TodoFilter filter={filter} onChange={setFilter} counts={counts} />
-
-            {counts.completed > 0 && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={clearCompleted}
-                className="text-muted-foreground hover:text-destructive"
-              >
-                Clear completed
-              </Button>
-            )}
-          </div> */}
-
-          {/* <TodoList
-            todos={filteredTodos}
-            onToggle={toggleTodo}
-            onDelete={deleteTodo}
-          /> */}
+          <TodoInput />
+          <TodoList />
         </motion.main>
       </div>
     </div>

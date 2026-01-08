@@ -8,12 +8,12 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/authContext";
 
 const page = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showPass, setShowPass] = useState<boolean>(false);
   const [showConfirmPass, setShowConfirmPass] = useState<boolean>(false);
-
+  const { register, loading } = useAuth();
   const router = useRouter();
 
   const [form, setForm] = useState({
@@ -43,18 +43,9 @@ const page = () => {
       return;
     }
 
-    setIsLoading(true);
-    try {
-      const res = await fetch("/api/auth/register", {
-        method: "POST",
-        body: JSON.stringify(form),
-      });
-      const data = await res.json();
 
-      if (res.status != 200) {
-        toast.error(data.message);
-        return;
-      }
+    try {
+      await register(form);
       toast.success("You are registered");
       router.push("/login");
       setForm({
@@ -64,10 +55,32 @@ const page = () => {
         confirmPassword: "",
       });
     } catch (error) {
-      toast.error(error as string);
-    } finally {
-      setIsLoading(false);
-    }
+      toast.error("Registration Failed ");
+    } 
+    // try {
+    //   const res = await fetch("/api/auth/register", {
+    //     method: "POST",
+    //     body: JSON.stringify(form),
+    //   });
+    //   const data = await res.json();
+
+    //   if (res.status != 200) {
+    //     toast.error(data.message);
+    //     return;
+    //   }
+    //   toast.success("You are registered");
+    //   router.push("/login");
+    //   setForm({
+    //     name: "",
+    //     email: "",
+    //     password: "",
+    //     confirmPassword: "",
+    //   });
+    // } catch (error) {
+    //   toast.error(error as string);
+    // } finally {
+    //   setIsLoading(false);
+    // }
   };
 
   return (
@@ -197,10 +210,10 @@ const page = () => {
 
             <Button
               type="submit"
-              disabled={isLoading}
+              disabled={loading}
               className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-medium shadow-button"
             >
-              {isLoading ? (
+              {loading ? (
                 <span className="flex items-center gap-2">
                   <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
                   Creating account...
