@@ -5,9 +5,9 @@ import { getAuthUser } from "@/lib/auth";
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: any
 ) {
-  const { id } = params;
+  const taskdId = params.id;
 
   const user = await getAuthUser();
 
@@ -18,7 +18,7 @@ export async function POST(
   const prisma = new PrismaClient();
 
   const task = await prisma.tasks.updateMany({
-    where: { id: id, userId: user.userId },
+    where: { id: taskdId, userId: user.userId },
     data: { completed: true },
   });
 
