@@ -26,6 +26,7 @@ type AuthContextType = {
     name: string;
     email: string;
     password: string;
+    confirmPassword: string;
   }) => Promise<void>;
   logout: () => void;
 };
@@ -84,6 +85,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     name: string;
     email: string;
     password: string;
+    confirmPassword: string;
   }) {
     setLoading(true);
     const res = await fetch("/api/auth/register", {
@@ -97,7 +99,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (res.status !== 200) {
       setLoading(false);
       toast.error(data.message);
-      return
+      return;
     }
 
     setUser(data.user);
@@ -107,6 +109,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     router.push("/login");
   }
 
+  // ------- Logout ----------
   async function logout() {
     setLoading(true);
     const res = await fetch("/api/auth/logout", {

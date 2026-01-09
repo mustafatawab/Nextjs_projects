@@ -89,14 +89,4 @@ model Tasks{
   @@map("tasks")
 }
 
-model Tags {
-  id        String   @id @default(uuid())
-  name      String
-  taskId    String
-  task      Tasks     @relation(fields: [taskId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
-
-  @@map("tags")
-}
 

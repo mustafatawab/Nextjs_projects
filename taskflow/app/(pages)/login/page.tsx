@@ -45,11 +45,15 @@ const page = () => {
       return;
     }
 
-    await login(form.email, form.password);
-    setForm({
-      email: "",
-      password: "",
-    });
+    try {
+      await login(form.email, form.password);
+      setForm({
+        email: "",
+        password: "",
+      });
+    } catch (error) {
+      toast.error(error as string);
+    }
 
     // try {
     //   const res = await fetch("/api/auth/login", {

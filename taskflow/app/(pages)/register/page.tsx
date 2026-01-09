@@ -33,27 +33,23 @@ const page = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (form.password !== form.confirmPassword) {
-      toast.error("Password Does Not Match");
-      return;
-    }
 
     if (!form.name || !form.email || !form.password || !form.confirmPassword) {
       toast.error("All Fields are required");
       return;
     }
-
-    await register({
-      name: form.name,
-      email: form.email,
-      password: form.password,
-    });
+    try {
+    await register(form);
     setForm({
       name: "",
       email: "",
       password: "",
       confirmPassword: "",
     });
+    toast.success("You are registered");
+    } catch (error) {
+      toast.error(error as string);
+    }
 
     // try {
     //   const res = await fetch("/api/auth/register", {
