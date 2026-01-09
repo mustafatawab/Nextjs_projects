@@ -1,11 +1,8 @@
 import { NextResponse, NextRequest } from "next/server";
 import { PrismaClient } from "@/app/generated/prisma/client";
 import { getAuthUser } from "@/lib/auth";
-
-export async function GET(
-  request: NextRequest,
-  { params }: any
-) {
+import { prisma } from "@/lib/prisma";
+export async function GET(request: NextRequest, { params }: any) {
   const { id } = params;
 
   const user = await getAuthUser();
@@ -14,25 +11,20 @@ export async function GET(
     return NextResponse.json({ message: "Unathorized" }, { status: 401 });
   }
 
-  const prisma = new PrismaClient();
+  // const prisma = new PrismaClient();
 
   const task = await prisma.tasks.findUnique({
-    where: { id: id , userId : user.userId },
+    where: { id: id, userId: user.userId },
   });
 
   if (!task) {
     return NextResponse.json({ message: "Task not found" }, { status: 401 });
   }
 
-  return NextResponse.json({task});
+  return NextResponse.json({ task });
 }
 
-
-
-export async function DELETE(
-  request: NextRequest,
-  { params }: any
-) {
+export async function DELETE(request: NextRequest, { params }: any) {
   const { id } = params;
 
   const user = await getAuthUser();
@@ -41,13 +33,12 @@ export async function DELETE(
     return NextResponse.json({ message: "Unathorized" }, { status: 401 });
   }
 
-  const prisma = new PrismaClient();
+  // const prisma = new PrismaClient();
 
   const task = await prisma.tasks.deleteMany({
-    where: { id: id , userId : user.userId },
+    where: { id: id, userId: user.userId },
   });
 
-  
   if (task.count === 0) {
     return NextResponse.json({ message: "Task not found" }, { status: 401 });
   }

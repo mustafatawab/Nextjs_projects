@@ -1,8 +1,9 @@
 import { NextResponse, NextRequest } from "next/server";
 import bcrypt from "bcrypt";
-import { PrismaClient } from "@/app/generated/prisma/client";
+import { PrismaClient } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
+import { prisma } from "@/lib/prisma";
 
 export async function GET() {
   return NextResponse.json({ status: "healthy" });
@@ -11,10 +12,13 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   const { email, password } = await request.json();
 
-  const prisma = new PrismaClient();
+  // const prisma = new PrismaClient();
 
-  if (!email || !password){
-    return NextResponse.json({message : "Email and Password are required"} , {status : 400})
+  if (!email || !password) {
+    return NextResponse.json(
+      { message: "Email and Password are required" },
+      { status: 400 }
+    );
   }
 
   const user = await prisma.user.findUnique({
@@ -36,12 +40,11 @@ export async function POST(request: NextRequest) {
       { status: 401 }
     );
   }
-  
 
   const payload = {
-    userId : user.id,
-    email : user.email
-  }
+    userId: user.id,
+    email: user.email,
+  };
   const secret = process.env.JWT_SECRET!;
   const token = await jwt.sign(payload, secret, { expiresIn: "5h" });
 

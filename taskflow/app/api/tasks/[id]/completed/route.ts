@@ -1,12 +1,10 @@
 import { NextResponse, NextRequest } from "next/server";
 
-import { PrismaClient } from "@/app/generated/prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { getAuthUser } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 
-export async function POST(
-  request: NextRequest,
-  { params }: any
-) {
+export async function POST(request: NextRequest, { params }: any) {
   const taskdId = params.id;
 
   const user = await getAuthUser();
@@ -15,7 +13,7 @@ export async function POST(
     return NextResponse.json({ message: "Unathorized" }, { status: 401 });
   }
 
-  const prisma = new PrismaClient();
+  // const prisma = new PrismaClient();
 
   const task = await prisma.tasks.updateMany({
     where: { id: taskdId, userId: user.userId },

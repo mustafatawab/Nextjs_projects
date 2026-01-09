@@ -8,7 +8,7 @@ export async function POST() {
     maxAge: 0,
   });
 
-  console.log(response.cookies.get("token"))
+  console.log(response.cookies.get("token"));
 
   return response;
 }
