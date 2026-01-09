@@ -14,6 +14,9 @@ export async function GET() {
     where: {
       userId: user.userId,
     },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
 
   return NextResponse.json({ tasks });
@@ -36,7 +39,7 @@ export async function POST(request: NextRequest) {
 
   const prisma = new PrismaClient();
 
-  const addTask = await prisma.tasks.create({
+  const task = await prisma.tasks.create({
     data: {
       title,
       userId: user.userId,
@@ -44,8 +47,5 @@ export async function POST(request: NextRequest) {
     },
   });
 
-  return NextResponse.json({ message: "Task Created", task: addTask });
+  return NextResponse.json({ message: "Task Created", task });
 }
-
-
-

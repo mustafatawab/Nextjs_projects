@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import Header from "@/components/Header";
 import { AuthProvider } from "@/context/authContext";
+import Providers from "@/providers/TenStackProviders";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,11 +32,13 @@ export default function RootLayout({
         cz-shortcut-listen="true"
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Providers>
         <AuthProvider>
           <Header />
           {children}
           <Toaster position="top-center" reverseOrder={false} />
         </AuthProvider>
+        </Providers>
       </body>
     </html>
   );

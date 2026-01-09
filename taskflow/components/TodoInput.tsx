@@ -1,15 +1,51 @@
+"use client";
 import React, { FormEvent, useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { Plus } from "lucide-react";
+import { Plus, Loader2 } from "lucide-react";
+import { useAuth } from "@/context/authContext";
+import toast from "react-hot-toast";
+import { useCreateTasks } from "@/hooks/useTodos";
 
-const TodoInput = ({ onAdd }: { onAdd: (text: string) => void }) => {
+const TodoInput = () => {
   const [text, setText] = useState("");
-
+  const createTasks = useCreateTasks();
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log("----- Submitting -----");
-    onAdd(text);
+    if (text.trim().length === 0) {
+      toast.error("Task title cannot be empty");
+      return;
+    }
+
+    try {
+      await createTasks.mutateAsync(text);
+      toast.success("Task created successfully");
+      setText("");
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Something went wrong");
+      }
+    }
+
+    // try {
+    //   const res = await fetch("/api/tasks", {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify({ title: text }),
+    //   });
+    //   const data = await res.json();
+    //   console.log(data);
+    //   toast.success(data.message);
+    //   setText("");
+    // } catch (error) {
+    //   if (error instanceof Error) {
+    //     toast.error(error.message);
+    //   } else {
+    //     toast.error("Something went wrong");
+    //   }
+    // }
   };
   return (
     <form onSubmit={handleSubmit} className="flex gap-3">
@@ -22,10 +58,14 @@ const TodoInput = ({ onAdd }: { onAdd: (text: string) => void }) => {
       <Button
         type="submit"
         size="lg"
+        disabled={createTasks.isPending}
         className="h-12 w-12 shrink-0 rounded-xl gradient-warm shadow-soft transition-smooth hover:shadow-glow"
       >
-        <Plus className="h-5 w-5" />
-        <span className="sr-only">Add task</span>
+        {createTasks.isPending ? (
+          <Loader2 className="h-5 w-5 animate-spin" />
+        ) : (
+          <Plus className="h-5 w-5" />
+        )}
       </Button>
     </form>
   );

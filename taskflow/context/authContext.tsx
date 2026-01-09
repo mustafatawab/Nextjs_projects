@@ -8,6 +8,7 @@ import {
   ReactNode,
 } from "react";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 type User = {
   id: string;
@@ -25,7 +26,6 @@ type AuthContextType = {
     name: string;
     email: string;
     password: string;
-    confirmPassword: string;
   }) => Promise<void>;
   logout: () => void;
 };
@@ -55,6 +55,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [user, token]);
 
+  // ----- Login Function -----
   async function login(email: string, password: string) {
     setLoading(true);
 
@@ -66,21 +67,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const data = await res.json();
 
-    if (!res.ok) {
+    if (res.status !== 200) {
       setLoading(false);
-      throw new Error("Invalid Credentails");
+      toast.error(data.message);
+      return;
     }
 
     setUser(data.user);
     setToken(data.token);
     setLoading(false);
+    router.push("/");
   }
 
+  // ----- Register Function -----
   async function register(payload: {
     name: string;
     email: string;
     password: string;
-    confirmPassword: string;
   }) {
     setLoading(true);
     const res = await fetch("/api/auth/register", {
@@ -91,15 +94,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const data = await res.json();
 
-    if (!res.ok) {
+    if (res.status !== 200) {
       setLoading(false);
-      throw new Error("Registration failed");
+      toast.error(data.message);
+      return
     }
 
     setUser(data.user);
     setToken(data.token);
 
     setLoading(false);
+    router.push("/login");
   }
 
   async function logout() {

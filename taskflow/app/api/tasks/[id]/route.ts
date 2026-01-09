@@ -26,3 +26,31 @@ export async function GET(
 
   return NextResponse.json({task});
 }
+
+
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const { id } = params;
+
+  const user = await getAuthUser();
+
+  if (!user) {
+    return NextResponse.json({ message: "Unathorized" }, { status: 401 });
+  }
+
+  const prisma = new PrismaClient();
+
+  const task = await prisma.tasks.deleteMany({
+    where: { id: id , userId : user.userId },
+  });
+
+  
+  if (task.count === 0) {
+    return NextResponse.json({ message: "Task not found" }, { status: 401 });
+  }
+
+  return NextResponse.json({ message: "Task deleted successfully" });
+}

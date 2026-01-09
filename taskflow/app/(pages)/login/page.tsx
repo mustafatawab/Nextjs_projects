@@ -21,7 +21,7 @@ import { useAuth } from "@/context/authContext";
 const page = () => {
   // const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showPass, setShowPass] = useState<boolean>(false);
-  const { login, loading } = useAuth()
+  const { login, loading } = useAuth();
   const router = useRouter();
 
   const [form, setForm] = useState({
@@ -45,18 +45,11 @@ const page = () => {
       return;
     }
 
-    try {
-      await login(form.email, form.password)
-      toast.success("You are Logged In")
-      router.push("/")
-      setForm({
-        email : "",
-        password: ""
-      })
-    } catch (error) {
-      toast.error("Check your credentials")
-    } finally {
-    }
+    await login(form.email, form.password);
+    setForm({
+      email: "",
+      password: "",
+    });
 
     // try {
     //   const res = await fetch("/api/auth/login", {

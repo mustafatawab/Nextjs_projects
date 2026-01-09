@@ -1,19 +1,13 @@
 "use client";
-import ContactForm from "@/components/form";
-import DataTable from "@/components/formdata";
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Sparkles } from "lucide-react";
 import TodoInput from "@/components/TodoInput";
 import TodoList from "@/components/TodoList";
+import toast from "react-hot-toast";
 
 const Home = () => {
-
-
-  const addTodo = async (text: string) => {
-    console.log("User entered the  " , text)
-  }
   return (
     <div className="min-h-screen gradient-subtle mt-20">
       <div className="container mx-auto max-w-xl px-4 py-12">
@@ -41,7 +35,7 @@ const Home = () => {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="space-y-6"
         >
-          <TodoInput onAdd={addTodo}/>
+          <TodoInput />
           <TodoList />
         </motion.main>
       </div>

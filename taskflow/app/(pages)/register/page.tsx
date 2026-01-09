@@ -43,19 +43,18 @@ const page = () => {
       return;
     }
 
-    try {
-      await register(form);
-      toast.success("You are registered");
-      router.push("/login");
-      setForm({
-        name: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-      });
-    } catch (error) {
-      toast.error("Registration Failed ");
-    }
+    await register({
+      name: form.name,
+      email: form.email,
+      password: form.password,
+    });
+    setForm({
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    });
+
     // try {
     //   const res = await fetch("/api/auth/register", {
     //     method: "POST",
