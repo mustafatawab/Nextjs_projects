@@ -78,6 +78,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setToken(data.token);
     setLoading(false);
     router.push("/");
+    toast.success(data.message);
   }
 
   // ----- Register Function -----
