@@ -106,6 +106,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setToken(data.token);
 
     setLoading(false);
+    toast.success(data.message);
     router.push("/login");
   }
 
