@@ -46,7 +46,6 @@ const page = () => {
       password: "",
       confirmPassword: "",
     });
-    toast.success("You are registered");
     } catch (error) {
       toast.error(error as string);
     }
