@@ -108,7 +108,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     setLoading(false);
     toast.success(data.message);
-    router.push("/login");
+    router.push("/");
   }
 
   // ------- Logout ----------

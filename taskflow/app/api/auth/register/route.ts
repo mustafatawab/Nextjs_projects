@@ -2,12 +2,18 @@ export const runtime = "nodejs";
 
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import { prisma } from "@/lib/prisma";
 
 export async function POST(request: NextRequest) {
   const { name, email, password, confirmPassword } = await request.json();
 
-  // const prisma = new PrismaClient();
+  if (!name || !email || !password || !confirmPassword) {
+    return NextResponse.json(
+      { message: "All fields are required" },
+      { status: 400 }
+    );
+  }
 
   const existingUser = await prisma.user.findUnique({
     where: { email: email },
@@ -16,14 +22,14 @@ export async function POST(request: NextRequest) {
   if (existingUser) {
     return NextResponse.json(
       { message: "Email already exists" },
-      { status: 401 }
+      { status: 400 }
     );
   }
 
   if (password != confirmPassword) {
     return NextResponse.json(
       { message: "Password does not match" },
-      { status: 401 }
+      { status: 400 }
     );
   }
   const hashPassword = await bcrypt.hash(password, 10);
@@ -37,11 +43,28 @@ export async function POST(request: NextRequest) {
   });
 
   if (user) {
-    return NextResponse.json(user);
+    const payload = {
+      userId: user.id,
+      email: user.email,
+    };
+    const secret = process.env.JWT_SECRET!;
+    const token = await jwt.sign(payload, secret, { expiresIn: "5h" });
+
+    const response = NextResponse.json({
+      token,
+      user,
+      message: "Registered successfully",
+    });
+
+    response.cookies.set("token", token, {
+      httpOnly: true,
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+    });
+    return response;
   }
 
   return NextResponse.json(
     { message: "something went wrong" },
-    { status: 401 }
+    { status: 500 }
   );
 }

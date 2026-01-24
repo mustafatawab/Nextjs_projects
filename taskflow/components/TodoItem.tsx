@@ -93,7 +93,7 @@ export function TodoItem({
 
       <button
         onClick={handleDelete}
-        className="opacity-0 transition-smooth group-hover:opacity-100 hover:text-destructive"
+        className="transition-smooth hover:text-destructive"
         aria-label="Delete task"
       >
         {isLoading ? (
